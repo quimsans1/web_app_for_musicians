@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'https://backend-server-wwk3.onrender.com/api/users';
-const API_URL_MAIN_USER = 'https://backend-server-wwk3.onrender.com/api/mainUser';
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Función para obtener todos los usuarios
 export const getUsers = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}/api/users`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener usuarios:", error);
@@ -17,7 +16,7 @@ export const getUsers = async () => {
 // Función para obtener un usuario por su ID
 export const getUserById = async (userId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}`);
+    const response = await axios.get(`${API_URL}/api/users/${userId}`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener el usuario con ID ${userId}:`, error);
@@ -28,7 +27,7 @@ export const getUserById = async (userId) => {
 // Get Main User
 export const getMainUser = async () => {
   try {
-    const response = await axios.get(API_URL_MAIN_USER);
+    const response = await axios.get(`${API_URL}/api/mainUser`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener usuario principal:", error);

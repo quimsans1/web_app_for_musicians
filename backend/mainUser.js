@@ -10,8 +10,8 @@ const mainUser = [
         id: uuidv4(),
         nickname: 'GuitarPlayer99',
         name: 'Marc Vernis',
-        description: "I'm a guitarist from Barcelona and I like to play guitar so much. I started studying since I was 5 yearas old.",
-        profilePicture: 'https://randomuser.me/api/portraits/men/32.jpg',
+        description: "I'm a guitarist from Barcelona and I like to play guitar so much! I started studying at the age of 5 years old.",
+        profilePicture: 'https://randomuser.me/api/portraits/men/40.jpg',
         backgroundImage: 'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
         photos: [
             'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
