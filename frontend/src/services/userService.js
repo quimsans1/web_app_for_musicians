@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/users';
-const API_URL_MAIN_USER = 'http://localhost:5000/api/mainUser';
+const API_URL = 'https://backend-server-wwk3.onrender.com/api/users';
+const API_URL_MAIN_USER = 'https://backend-server-wwk3.onrender.com/api/mainUser';
 
 // Función para obtener todos los usuarios
 export const getUsers = async () => {

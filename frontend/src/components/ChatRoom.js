@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { Box, TextField, Button, List, ListItem, Typography, Paper } from '@mui/material';
 
-const socket = io('http://localhost:5000'); // Conectar al servidor
+const socket = io('https://backend-server-wwk3.onrender.com'); // Conectar al servidor
 
 const ChatRoom = ({ roomId }) => {
   const [messages, setMessages] = useState([]);

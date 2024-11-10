@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/advertisements';
+const API_URL = 'https://backend-server-wwk3.onrender.com/api/advertisements';
 
 // Función para obtener todos los advertisements
 export const getAdvertisements = async () => {
