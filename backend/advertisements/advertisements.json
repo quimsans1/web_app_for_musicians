@@ -1,0 +1,39 @@
+[
+  {
+    "id": "80d4ff65-c082-42c8-9061-9cf072b712e8",
+    "userId": "b71abae1-22c3-4318-9c11-87ea77c85a4a",
+    "title": "Clases de Guitarra para Principiantes",
+    "description": "bla bla bla bla bla bla.",
+    "location": "Barcelona, España",
+    "type": "Offer",
+    "image": "https://www.adkguitar.com/cdn/shop/articles/Teaching_Guitar_7f53df60-944c-4301-b385-b0aa119a126f_800x.jpg?v=1574362730"
+  },
+  {
+    "id": "70ae0e05-23ed-4374-985d-145cebf2df17",
+    "userId": "b71abae1-22c3-4318-9c11-87ea77c85a4a",
+    "title": "Concierto de Jazz",
+    "description": "bla bla bla bla bla bla.",
+    "location": "Madrid, España",
+    "type": "Event",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMwdpraULk0SNrTx46cjJ5ikNXKdrRBdP4aA&s"
+  },
+  {
+    "id": "dba21d21-9712-443b-9881-42ba14edeeb5",
+    "userId": "4eaa3967-aa00-4dc2-944e-7de71dbac288",
+    "title": "Busco Vocalista para Banda de Rock",
+    "description": "bla bla bla bla bla bla.",
+    "location": "Valencia, España",
+    "type": "Offer",
+    "image": "https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg"
+  },
+  {
+    "id": "10ada92d-f9e8-4d49-ad4c-3c13a5e1e826",
+    "userId": "3829088",
+    "title": "as",
+    "description": "as",
+    "location": "Barcelona, Spain",
+    "type": "Offer",
+    "image": "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+    "link": "https://es.wikipedia.org/wiki/Wikipedia:Portada"
+  }
+]

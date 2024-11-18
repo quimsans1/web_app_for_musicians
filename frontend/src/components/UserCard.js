@@ -1,12 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Avatar, Card, CardContent, Box, IconButton } from '@mui/material';
+import { Typography, Avatar, Card, CardContent, Chip, Box, IconButton } from '@mui/material';
 import MessageIcon from '@mui/icons-material/Message';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';  // Nota musical
+import MusicNoteIcon from '@mui/icons-material/MusicNote'; // Nota musical
 import PlaceIcon from '@mui/icons-material/Place';
-import LanguageIcon from '@mui/icons-material/Language';  // Mundo
-import GuitarIcon from '@mui/icons-material/MusicNote';  // Sustitución de guitarra por música (icono alternativo)
+import LanguageIcon from '@mui/icons-material/Language'; // Mundo
 import PublicIcon from '@mui/icons-material/Public';
 
 const UserCard = ({ user }) => {
@@ -57,7 +56,7 @@ const UserCard = ({ user }) => {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: `url(${user.backgroundImage})`,
+          backgroundImage: `url(${user.backgroundImage || 'defaultImage.jpg'})`, // Imagen predeterminada si no existe
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: 0,
@@ -80,9 +79,26 @@ const UserCard = ({ user }) => {
             style={{ width: 80, height: 80, marginRight: 20 }}
           />
           <div>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {user.nickname}
-            </Typography>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                {user.nickname}
+              </Typography>
+              <Chip
+                label={user.userType}
+                variant="outlined"
+                size="small"
+                sx={{
+                  marginLeft: '8px',
+                  padding: '0px 8px',
+                  height: '24px',
+                  borderColor: '#1e88e5',
+                  color: '#1e88e5',
+                  backgroundColor: 'white',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                }}
+              />
+            </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <PlaceIcon
                 className="icon"
@@ -102,7 +118,7 @@ const UserCard = ({ user }) => {
                 color="textSecondary"
                 sx={{ transition: 'color 0.2s ease-in-out' }}
               >
-                {user.location}
+                {user.location || 'No location'}
               </Typography>
             </div>
           </div>
@@ -110,9 +126,8 @@ const UserCard = ({ user }) => {
 
         {/* MUSIC STYLES, INSTRUMENTS & LANGUAGES */}
         <div style={{ marginTop: 10 }}>
-          <div            
-            style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}
-          >
+          {/* Mostrar música estilos */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
             <MusicNoteIcon
               className="icon"
               sx={{
@@ -122,25 +137,54 @@ const UserCard = ({ user }) => {
                 transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out', // Añadir transición
               }}
             />
-            <Typography>{user.musicStyles.join(', ')}</Typography>
+            <Typography>
+              {user.musicStyles && user.musicStyles.length > 0
+                ? user.musicStyles.join(', ')
+                : 'No music styles'}
+            </Typography>
           </div>
-          <div
-            style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}
-          >
-            <MusicNoteIcon
-              className="icon"
-              sx={{
-                fontSize: '19px',
-                marginRight: '4px',
-                color: 'gray',
-                transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out', // Añadir transición
-              }}
-            />
-            <Typography>{user.instrument.join(', ')}</Typography>
+
+          {/* Music Info (Conditional Rendering) */}
+          <div>
+            {user.userType === 'Musician' ? (
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <MusicNoteIcon
+                  className="icon"
+                  sx={{
+                    fontSize: '19px',
+                    marginRight: '4px',
+                    color: 'gray',
+                    transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
+                  }}
+                />
+                <Typography>
+                  {user.musicianInfo.instruments?.length > 0
+                    ? user.musicianInfo.instruments.join(', ')
+                    : 'No instruments'}
+                </Typography>
+              </div>
+            ) : user.userType === 'Group' ? (
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <MusicNoteIcon
+                  className="icon"
+                  sx={{
+                    fontSize: '19px',
+                    marginRight: '4px',
+                    color: 'gray',
+                    transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
+                  }}
+                />
+                <Typography>
+                  {user.groupInfo.groupType?.length > 0
+                    ? user.groupInfo.groupType.join(', ')
+                    : 'No group type'}
+                </Typography>
+              </div>
+            ) : null}
           </div>
-          <div
-            style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}
-          >
+
+          {/* Mostrar idiomas */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
             <PublicIcon
               className="icon"
               sx={{
@@ -150,7 +194,11 @@ const UserCard = ({ user }) => {
                 transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
               }}
             />
-            <Typography>{user.languages.join(', ')}</Typography>
+            <Typography>
+              {user.languages && user.languages.length > 0
+                ? user.languages.join(', ')
+                : 'No languages'}
+            </Typography>
           </div>
         </div>
 

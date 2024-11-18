@@ -5,6 +5,7 @@ import {
   Typography,
   Card,
   CardContent,
+  Chip,
   IconButton,
   Button,
   Grid,
@@ -37,45 +38,50 @@ const ProfilePage = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [userAdvertisements, seUserAdvertisements] = useState([]);
+  const [userAdvertisements, setUserAdvertisements] = useState([]);
+  const [userType, setUserType] = useState([]);
 
-  // Get User Information
+  // GET USER INFORMATION
   useEffect(() => {
-    const fetchMainUser = async () => {
+    const fetchUser = async () => {
       try {
         const mainUserDataArray = await getMainUser();
-        const mainUserData = mainUserDataArray[0]; // Extrae el primer objeto del array
+        const mainUser = mainUserDataArray[0];
   
-        if (mainUserData && userId === mainUserData.id) {
-          setUser(mainUserData);
+        if (mainUser && userId === mainUser.id) {
+          setUser(mainUser);
         } else {
-          fetchUser();
+          fetchUserById();
         }
       } catch (error) {
         console.error('Error fetching main user data:', error);
       }
     };
-  
-    const fetchUser = async () => {
+    const fetchUserById = async () => {
       try {
-        const userData = await getUserById(userId);
-        setUser(userData);
+        console.log('userId_', userId)
+        const user = await getUserById(userId);
+        console.log('user_', user)
+        setUser(user);
       } catch (error) {
-        console.error(`Error fetching user with ID ${userId}:`, error);
+        console.error('Error al obtener todos los usuarios:', error);
       }
     };
-  
-    fetchMainUser();
+
+    fetchUser();
   }, [userId]);
 
-  // Get Advertisements of User
+  // Get ADVERTISEMENTS of User
   useEffect(() => {
-    const fetchAdvertisements = async () => {
-      const userAdvertisements = await getAdvertisements();
-      const filteredAdvertisements = userAdvertisements.filter(adv => adv.userId === userId);
-      seUserAdvertisements(filteredAdvertisements)
-    };
-    fetchAdvertisements();    
+    if (user) {
+      const fetchAdvertisements = async () => {
+        const allAdvertisements = await getAdvertisements();
+        const userAdvertisements = allAdvertisements.filter(adv => adv.userId === userId);
+        setUserAdvertisements(userAdvertisements);
+      };
+      fetchAdvertisements();
+      setUserType(user.userType)
+    }
   }, [user, userId]);
 
   const handleFavoriteToggle = () => setIsFavorited(!isFavorited);
@@ -120,7 +126,7 @@ const ProfilePage = () => {
                 borderRadius: '10px',
               }}
             />
-            {/* NICKNAME & NAME */}
+            {/* PROFILE PICTURE */}
             <Avatar
               src={user.profilePicture}
               alt={user.nickname}
@@ -134,15 +140,45 @@ const ProfilePage = () => {
                 transform: 'translateX(-50%)',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
               }}
-            />
-            <Typography variant="h5" sx={{ fontWeight: 'bold', mt: 10 }}>
-              {user.nickname}
-            </Typography>
-            <Typography color="textSecondary" variant="subtitle2">
+            />            
+            {/* NICKNAME & USER TYPE */}
+            <Box sx={{ display: 'inline-block', textAlign: 'center', position: 'relative', top: '80px'}}>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 'bold',
+                  display: 'inline-block',
+                }}
+              >
+                {user.nickname}
+              </Typography>
+              {/* USER TYPE */}
+              <Chip
+                label={userType}
+                variant="filled"
+                size="medium"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '100%', // Placing the chip directly after the nickname
+                  transform: 'translateY(-50%)', // Align vertically with the nickname
+                  marginLeft: 1, // Add some space between the nickname and the chip
+                  padding: '0px 9px',
+                  height: '22px',
+                  borderColor: '#1e88e5',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  color: '#1e88e5',
+                  backgroundColor: 'white',
+                }}
+              />
+            </Box>
+            {/* REAL NAME */}
+            <Typography color="textSecondary" variant="subtitle1" sx={{position: 'relative', top: '85px'}}>
               {user.name}
             </Typography>
             {/* FAVORITE & MESSAGE BUTTONS */}
-            <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+            <Box display="flex" flexDirection="column" alignItems="center" mt={11}>
               <IconButton color={isFavorited ? 'secondary' : 'default'} onClick={handleFavoriteToggle}>
                 <FavoriteIcon fontSize="large" />
               </IconButton>
@@ -151,72 +187,95 @@ const ProfilePage = () => {
                 variant="contained"
                 color="primary"
                 startIcon={<MessageIcon />}
-                sx={{ mt: 1 }}
+                sx={{ mt: 4 }}
                 onClick={handleChatClick}
               >
                 Message
               </Button>
             </Box>
           </Box>
-          
           {/* PERSONAL INFORMATION */}
           <Box sx={{ position: 'relative', textAlign: 'left', width: '49%', float: 'right' }}>
             <Card sx={{ padding: 3, marginTop: 0.2 }}>
-              {/* Instruments, Music Styles, Languages, Location */}
               <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Instruments</Typography>
-                <Typography sx={{ mb: 1 }}>
-                  <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-                  {user.instrument.join(', ')}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Music Styles</Typography>
-                <Typography sx={{ mb: 1 }}>
-                  <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-                  {user.musicStyles.join(', ')}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Languages</Typography>
-                <Typography sx={{ mb: 1 }}>
-                  <PublicIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-                  {user.languages.join(', ')}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Location</Typography>
-                <Typography sx={{ mb: 1 }}>
-                  <PlaceIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-                  {user.location}
-                </Typography>
+                <>
+                  {user?.userType === 'Musician' && user.musicianInfo?.instruments && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Instruments</Typography>
+                      <Typography sx={{ mb: 1.5 }}>
+                        <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                        {user.musicianInfo.instruments.join(', ')}
+                      </Typography>
+                    </>
+                  )}
+                  {user?.userType === 'Group' && user.groupInfo?.groupType && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Group Type</Typography>
+                      <Typography sx={{ mb: 1.5 }}>
+                        <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                        {user.groupInfo.groupType.join(', ')}
+                      </Typography>
+                    </>
+                  )}
+                  {user?.userType === 'Service' && user.serviceInfo?.serviceType && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Activities</Typography>
+                      <Typography sx={{ mb: 1.5 }}>
+                        <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                        {user.serviceInfo.serviceType.join(', ')}
+                      </Typography>
+                    </>
+                  )}
+                  {/* MUSIC STYLES, LANGUAGES, LOCATION */}
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Music Styles</Typography>
+                  <Typography sx={{ mb: 1.5 }}>
+                    <MusicNoteIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    {user.musicStyles.join(', ')}
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Languages</Typography>
+                  <Typography sx={{ mb: 1.5 }}>
+                    <PublicIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    {user.languages.join(', ')}
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Location</Typography>
+                  <Typography sx={{ mb: 1.5 }}>
+                    <PlaceIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    {user.location}
+                  </Typography>
+                  {/* DESCRIPTION */}
+                  <Divider sx={{ my: 3 }} />
+                  <Typography variant="body1" sx={{ textAlign: 'justify' }}>{user.description}</Typography>
 
-                <Divider sx={{ my: 3 }} />
-                <Typography variant="body1">{user.description}</Typography>
-
-                {/* LINKS */}
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 2 }}>Social Links</Typography>
-                <Grid container spacing={1} direction="column" justifyContent="flex-start" mt={1}>
-                  {user.links.map((link, index) => (
-                    <Grid item key={index}>
-                      <Box display="flex" alignItems="center" mb={1}> {/* Agregué un margen en la parte inferior para separar los elementos */}
-                        <IconButton
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          color="primary"
-                          sx={{ mr: 1 }}
-                        >
-                          {getLinkIcon(link.url)}
-                        </IconButton>
-                        <Typography
-                          component="a"
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          color="primary"
-                          sx={{ textDecoration: 'none', fontSize: '0.9rem' }}
-                        >
-                          {link.url}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
+                  {/* SOCIAL LINKS */}
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 2 }}>Social Links</Typography>
+                  <Grid container spacing={1} direction="column" justifyContent="flex-start" mt={1}>
+                    {user.links.map((link, index) => (
+                      <Grid item key={index}>
+                        <Box display="flex" alignItems="center" mb={-1}>
+                          <IconButton
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="primary"
+                            sx={{ mr: 0.5 }}
+                          >
+                            {getLinkIcon(link.url)}
+                          </IconButton>
+                          <Typography
+                            component="a"
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="primary"
+                            sx={{ textDecoration: 'none', fontSize: '0.9rem' }}
+                          >
+                            {link.url}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </>
               </CardContent>
             </Card>
           </Box>
@@ -224,21 +283,29 @@ const ProfilePage = () => {
       </Grid>
 
       {/* GALLERY */}
-      <Box sx={{ marginTop: 4, width: '50%', margin: 'auto', padding: 1.2, float: 'right' }}>
+      <Box
+        sx={{
+          marginTop: 4,
+          width: userAdvertisements.length === 0 ? '100%' : '50%', // Occupies all Width if no advertisements
+          margin: 'auto',
+          padding: 1.2,
+          float: userAdvertisements.length === 0 ? 'none' : 'right',
+        }}
+      >
         <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Gallery</Typography>
-        <ImageList cols={4} gap={8}>
+        <ImageList cols={userAdvertisements.length === 0 ? 5 : 4} gap={8}>
           {user.photos.map((photo, index) => (
             <ImageListItem
               key={index}
               onClick={() => handleDialogOpen(index)}
               sx={{
                 cursor: 'pointer',
-                position: 'relative', // Asegura que el contenedor esté posicionado correctamente
-                overflow: 'visible',  // Permite que la imagen se salga del contenedor sin ser recortada
-                transition: 'transform 0.3s ease', // Transición suave
+                position: 'relative',
+                overflow: 'visible',
+                transition: 'transform 0.3s ease',
                 '&:hover': {
-                  transform: 'scale(1.01)', // Aumenta el tamaño de la imagen al hacer hover
-                  zIndex: 1, // Asegura que la imagen esté por encima de otros elementos
+                  transform: 'scale(1.01)',
+                  zIndex: 1,
                 },
               }}
             >
@@ -248,10 +315,10 @@ const ProfilePage = () => {
                 style={{
                   width: '100%',
                   height: '200px',
-                  objectFit: 'cover', // Asegura que la imagen se recorte de manera proporcional
+                  objectFit: 'cover',
                   borderRadius: '8px',
                   boxShadow: '0px 2px 10px rgba(0,0,0,0.1)',
-                  transition: 'transform 0.3s ease', // Suaviza la transición al hacer hover
+                  transition: 'transform 0.3s ease',
                 }}
               />
             </ImageListItem>
@@ -260,16 +327,18 @@ const ProfilePage = () => {
       </Box>
 
       {/* ADVERTISEMENTS */}
-      <Box sx={{ marginTop: 4, width: '50%', margin: 'auto', padding: 1.2, float: 'left' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Advertisements</Typography>
-        <Grid container spacing={1} >
-          {userAdvertisements.map((advertisement) => (
-            <Grid item xs={12} md={12} lg={12} key={advertisement.id} >
-              <AdvertisementCard ad={advertisement} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      {userAdvertisements.length > 0 && (
+        <Box sx={{ marginTop: 4, width: '50%', margin: 'auto', padding: 1.2, float: 'left' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Advertisements</Typography>
+          <Grid container spacing={1}>
+            {userAdvertisements.map((advertisement) => (
+              <Grid item xs={12} md={12} lg={12} key={advertisement.id}>
+                <AdvertisementCard ad={advertisement} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
 
       {/* IMAGE VIEWER MODAL */}
       <Dialog open={modalOpen} onClose={handleDialogClose} maxWidth="md" fullWidth>

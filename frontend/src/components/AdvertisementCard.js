@@ -16,6 +16,7 @@ const AdvertisementsCard = ({ ad }) => {
 
   // Get User by ID
   useEffect(() => {
+    console.log('userId advertisementCard', userId)
     const fetchUser = async () => {
       try {
         const userData = await getUserById(userId);

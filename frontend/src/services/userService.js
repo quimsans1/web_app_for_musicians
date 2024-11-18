@@ -2,10 +2,12 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-// Función para obtener todos los usuarios
-export const getUsers = async () => {
+// Función para obtener todos los usuarios, con o sin filtros
+export const getUsers = async (filters = {}) => {
   try {
-    const response = await axios.get(`${API_URL}/api/users`);
+    const queryParams = new URLSearchParams(filters).toString();
+    const url = queryParams ? `${API_URL}/api/users?${queryParams}` : `${API_URL}/api/users`;
+    const response = await axios.get(url);
     return response.data;
   } catch (error) {
     console.error("Error al obtener usuarios:", error);
