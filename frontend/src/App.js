@@ -14,7 +14,7 @@ function App() {
     const fetchUsers = async () => {
       try {
         const user = await getMainUser();
-        setMainUser(user);
+        setMainUser(user[0]);
       } catch (error) {
         console.error('Error fetching main user:', error);
       }
@@ -27,8 +27,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout mainUser={mainUser}/>}>
           <Route index element={<Home />} />
-          <Route path="profile/:userId" element={<ProfilePage />} />
-          <Route path="advertisements" element={<AdvertisementsPage />} />
+          <Route path="profile/:userId" element={<ProfilePage mainUser={mainUser} />} />
+          <Route path="advertisements" element={<AdvertisementsPage mainUser={mainUser} />} />
           <Route path="chats" element={<ChatsPage />} />
         </Route>
       </Routes>

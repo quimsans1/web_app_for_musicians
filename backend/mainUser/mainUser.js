@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 
@@ -27,38 +28,39 @@ const writeMainUser = (data) => {
   }
 };
 
-// Siempre inicializa el mainUser con los datos por defecto, sobrescribiendo cualquier dato previo
+// Siempre inicializa el mainUser con los datos por defecto
 const initializeMainUser = () => {
-    const mainUser = readMainUser();
-    // Si no existe o está vacío, inicializamos con datos predeterminados
-    if (!mainUser || mainUser.length === 0) {
-      const newMainUser = {
-        id: '38290880',  // ID fijo
-        nickname: 'GuitarPlayer99',
-        name: 'Marc Vernis',
-        description: "I'm a guitarist from Barcelona and I like to play guitar so much! I started studying at the age of 5 years old.",
-        profilePicture: 'https://randomuser.me/api/portraits/men/40.jpg',
-        backgroundImage: 'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
-        photos: [
-          'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
-          'https://c8.alamy.com/comp/D4WWFJ/rock-band-vintage-playing-live-on-stage-poland-D4WWFJ.jpg'
-        ],
-        musicStyles: ['Blues', 'Funk'],
-        languages: ['English', 'Spanish'],
-        location: 'Barcelona, Spain',
-        links: [
-          { platform: 'YouTube', url: 'https://youtube.com/user1' },
-          { platform: 'Instagram', url: 'https://instagram.com/user1' },
-          { platform: 'Unknown', url: 'https://es.wikipedia.org/wiki/Iron_Maiden' }
-        ],
-        userType: 'Musician',
-        musicianInfo: { instruments: ['Drums', 'Bass'] },
-        groupInfo: { groupType: '' },
-        serviceInfo: { serviceType: '' }
-      };
-      writeMainUser([newMainUser]);  // Escribe los datos predeterminados solo si el archivo está vacío
-    }
+  const newMainUser = {
+    id: uuidv4(), // ID fijo
+    nickname: 'GuitarPlayer99',
+    name: 'Marc Vernis',
+    description:
+      "I'm a guitarist from Barcelona and I like to play guitar so much! I started studying at the age of 5 years old.",
+    profilePicture: 'https://randomuser.me/api/portraits/men/40.jpg',
+    backgroundImage:
+      'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
+    photos: [
+      'https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg',
+      'https://c8.alamy.com/comp/D4WWFJ/rock-band-vintage-playing-live-on-stage-poland-D4WWFJ.jpg',
+    ],
+    musicStyles: ['Blues', 'Funk'],
+    languages: ['English', 'Spanish'],
+    location: 'Barcelona, Spain',
+    links: [
+      { platform: 'YouTube', url: 'https://youtube.com/user1' },
+      { platform: 'Instagram', url: 'https://instagram.com/user1' },
+      { platform: 'Unknown', url: 'https://es.wikipedia.org/wiki/Iron_Maiden' },
+    ],
+    userType: 'Musician',
+    musicianInfo: { instruments: ['Drums', 'Bass'] },
+    groupInfo: { groupType: '' },
+    serviceInfo: { serviceType: '' },
   };
+
+  // Sobrescribir siempre al iniciar el servidor
+  writeMainUser([newMainUser]);
+  console.log('Datos del usuario inicializados por defecto.');
+};
 
 // Inicializa el mainUser con los datos por defecto al arrancar el servidor
 initializeMainUser();

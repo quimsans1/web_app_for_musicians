@@ -27,12 +27,12 @@ import PublicIcon from '@mui/icons-material/Public';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { getUserById, getMainUser } from '../services/userService';
+import { getUserById } from '../services/userService';
 import { getAdvertisements } from '../services/advertisementsService';
 import AdvertisementCard from '../components/AdvertisementCard';
 import { useNavigate } from 'react-router-dom';
 
-const ProfilePage = () => {
+const ProfilePage = ({ mainUser }) => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
@@ -45,9 +45,6 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const mainUserDataArray = await getMainUser();
-        const mainUser = mainUserDataArray[0];
-  
         if (mainUser && userId === mainUser.id) {
           setUser(mainUser);
         } else {
@@ -59,17 +56,14 @@ const ProfilePage = () => {
     };
     const fetchUserById = async () => {
       try {
-        console.log('userId_', userId)
         const user = await getUserById(userId);
-        console.log('user_', user)
         setUser(user);
       } catch (error) {
         console.error('Error al obtener todos los usuarios:', error);
       }
     };
-
     fetchUser();
-  }, [userId]);
+  }, [userId, mainUser]);
 
   // Get ADVERTISEMENTS of User
   useEffect(() => {
@@ -178,21 +172,23 @@ const ProfilePage = () => {
               {user.name}
             </Typography>
             {/* FAVORITE & MESSAGE BUTTONS */}
-            <Box display="flex" flexDirection="column" alignItems="center" mt={11}>
-              <IconButton color={isFavorited ? 'secondary' : 'default'} onClick={handleFavoriteToggle}>
-                <FavoriteIcon fontSize="large" />
-              </IconButton>
-              <Button
-                aria-label="send message"
-                variant="contained"
-                color="primary"
-                startIcon={<MessageIcon />}
-                sx={{ mt: 4 }}
-                onClick={handleChatClick}
-              >
-                Message
-              </Button>
-            </Box>
+            { user !== mainUser && (
+              <Box display="flex" flexDirection="column" alignItems="center" mt={11}>
+                <IconButton color={isFavorited ? 'secondary' : 'default'} onClick={handleFavoriteToggle}>
+                  <FavoriteIcon fontSize="large" />
+                </IconButton>
+                <Button
+                  aria-label="send message"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<MessageIcon />}
+                  sx={{ mt: 4 }}
+                  onClick={handleChatClick}
+                >
+                  Message
+                </Button>
+              </Box>
+            )}
           </Box>
           {/* PERSONAL INFORMATION */}
           <Box sx={{ position: 'relative', textAlign: 'left', width: '49%', float: 'right' }}>
@@ -333,7 +329,7 @@ const ProfilePage = () => {
           <Grid container spacing={1}>
             {userAdvertisements.map((advertisement) => (
               <Grid item xs={12} md={12} lg={12} key={advertisement.id}>
-                <AdvertisementCard ad={advertisement} />
+                <AdvertisementCard key={advertisement.id} ad={advertisement} mainUser={mainUser} />
               </Grid>
             ))}
           </Grid>

@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { getAdvertisements, createAdvertisement } from '../services/advertisementsService'; // Importar servicio
-import { Box, Grid, Button, Modal, TextField, Typography, Chip, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { getAdvertisements, createAdvertisement } from '../services/advertisementsService';
+import {
+  Box,
+  Grid,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  Snackbar,
+  Alert,
+  Chip,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 import AdvertisementCard from '../components/AdvertisementCard';
 
-const AdvertisementsPage = () => {
+const AdvertisementsPage = ({ mainUser }) => {
   const [advertisements, setAdvertisements] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -12,8 +26,10 @@ const AdvertisementsPage = () => {
     type: '',
     image: '',
     description: '',
-    link: ''
+    link: '',
   });
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchAdvertisements = async () => {
@@ -26,6 +42,9 @@ const AdvertisementsPage = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const handleSuccessSnackbarClose = () => setSuccessSnackbarOpen(false);
+  const handleErrorSnackbarClose = () => setErrorSnackbarOpen(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({
@@ -36,23 +55,23 @@ const AdvertisementsPage = () => {
 
   const handlePublish = async () => {
     if (Object.values(formValues).some((value) => !value.trim())) {
-      alert('Todos los campos son obligatorios');
+      setErrorSnackbarOpen(true); // Mostrar mensaje de error
       return;
     }
-  
+
     try {
-      console.log('Form values:', formValues); // Comprova els valors del formulari
+      console.log('Form values:', formValues);
       const newAd = await createAdvertisement(formValues);
-      console.log('Nou anunci creat:', newAd);
-      
-      // Si la publicació és exitosa, actualitza el conjunt d'anuncis
+      console.log('Nuevo anuncio creado:', newAd);
+
       setAdvertisements((prev) => [...prev, newAd]);
-      setIsModalOpen(false); // Tanca el modal després de publicar
-      setFormValues({ title: '', location: '', type: '', image: '', description: '', link: '' }); // Reinicia el formulari
+      setIsModalOpen(false); // Cierra el modal
+      setSuccessSnackbarOpen(true); // Mostrar mensaje de éxito
+      setFormValues({ title: '', location: '', type: '', image: '', description: '', link: '' }); // Reinicia el formulario
     } catch (error) {
       console.error('Error al crear el advertisement:', error);
     }
-  };  
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -64,7 +83,7 @@ const AdvertisementsPage = () => {
 
       <Grid container spacing={2}>
         {advertisements.map((ad) => (
-          <AdvertisementCard key={ad.id} ad={ad} />
+          <AdvertisementCard key={ad.id} ad={ad} mainUser={mainUser} />
         ))}
       </Grid>
 
@@ -134,7 +153,6 @@ const AdvertisementsPage = () => {
               <MenuItem value="Barcelona, Spain">Barcelona, Spain</MenuItem>
               <MenuItem value="Madrid, Spain">Madrid, Spain</MenuItem>
               <MenuItem value="Valencia, Spain">Valencia, Spain</MenuItem>
-              {/* Agrega más ubicaciones aquí */}
             </Select>
           </FormControl>
 
@@ -161,6 +179,30 @@ const AdvertisementsPage = () => {
           </Box>
         </Box>
       </Modal>
+
+      {/* Snackbar para éxito */}
+      <Snackbar
+        open={successSnackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSuccessSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSuccessSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          Advertisement created successfully!
+        </Alert>
+      </Snackbar>
+
+      {/* Snackbar para error */}
+      <Snackbar
+        open={errorSnackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleErrorSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleErrorSnackbarClose} severity="error" sx={{ width: '100%' }}>
+          All fields are required!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

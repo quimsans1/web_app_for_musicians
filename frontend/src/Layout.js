@@ -25,7 +25,7 @@ const Layout = ({ mainUser }) => {
   const [profileUserName, setProfileUserName] = useState(null);
 
   useEffect(() => {
-    setUserMain(mainUser[0]);
+    setUserMain(mainUser);
   }, [mainUser]);
 
   useEffect(() => {

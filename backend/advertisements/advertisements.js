@@ -16,7 +16,8 @@ const initialAdvertisements = [
     description: 'bla bla bla bla bla bla.',
     location: 'Barcelona, España',
     type: 'Offer',
-    image: 'https://www.adkguitar.com/cdn/shop/articles/Teaching_Guitar_7f53df60-944c-4301-b385-b0aa119a126f_800x.jpg?v=1574362730'
+    image: 'https://www.adkguitar.com/cdn/shop/articles/Teaching_Guitar_7f53df60-944c-4301-b385-b0aa119a126f_800x.jpg?v=1574362730',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
   },
   { 
     id: uuidv4(),
@@ -25,7 +26,8 @@ const initialAdvertisements = [
     description: 'bla bla bla bla bla bla.',
     location: 'Madrid, España',
     type: 'Event',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMwdpraULk0SNrTx46cjJ5ikNXKdrRBdP4aA&s'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMwdpraULk0SNrTx46cjJ5ikNXKdrRBdP4aA&s',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
   },
   { 
     id: uuidv4(),
@@ -34,7 +36,8 @@ const initialAdvertisements = [
     description: 'bla bla bla bla bla bla.',
     location: 'Valencia, España',
     type: 'Offer',
-    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg'
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
   },
   // Agrega más advertisements aquí según sea necesario
 ];
