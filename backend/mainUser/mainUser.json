@@ -1,50 +1,46 @@
-[
-  {
-    "id": "6d2deba7-99c2-46f5-b302-e968c2d1f421",
-    "nickname": "GuitarPlayer99",
-    "name": "Marc Vernis",
-    "description": "I'm a guitarist from Barcelona and I like to play guitar so much! I started studying at the age of 5 years old.",
-    "profilePicture": "https://randomuser.me/api/portraits/men/40.jpg",
-    "backgroundImage": "https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg",
-    "photos": [
-      "https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg",
-      "https://c8.alamy.com/comp/D4WWFJ/rock-band-vintage-playing-live-on-stage-poland-D4WWFJ.jpg"
-    ],
-    "musicStyles": [
-      "Blues",
-      "Funk"
-    ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "location": "Barcelona, Spain",
-    "links": [
-      {
-        "platform": "YouTube",
-        "url": "https://youtube.com/user1"
-      },
-      {
-        "platform": "Instagram",
-        "url": "https://instagram.com/user1"
-      },
-      {
-        "platform": "Unknown",
-        "url": "https://es.wikipedia.org/wiki/Iron_Maiden"
-      }
-    ],
-    "userType": "Musician",
-    "musicianInfo": {
-      "instruments": [
-        "Drums",
-        "Bass"
-      ]
+{
+  "id": "a20256da-45b8-426a-81ed-9ebda2e23f2e",
+  "nickname": "GuitarPlayer99",
+  "name": "Marc Vernis",
+  "description": "I'm a guitarist from Barcelona and I like to play guitar so much!",
+  "profilePicture": "blob:http://localhost:3000/6eed6f4a-9b41-469c-8c16-6b4a440e5c97",
+  "backgroundImage": "https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg",
+  "photos": [
+    "https://example.com/photo1.jpg",
+    "https://example.com/photo2.jpg"
+  ],
+  "musicStyles": [
+    "Blues",
+    "Funk"
+  ],
+  "languages": [
+    "English",
+    "Spanish"
+  ],
+  "location": "London, UK",
+  "links": [
+    {
+      "url": "https://youtube.com/user1"
     },
-    "groupInfo": {
-      "groupType": ""
-    },
-    "serviceInfo": {
-      "serviceType": ""
+    {
+      "url": "https://instagram.com/user1"
     }
+  ],
+  "userType": "Musician",
+  "musicianInfo": {
+    "instruments": [
+      "Drums",
+      "Bass"
+    ]
+  },
+  "groupInfo": {
+    "groupType": [
+      ""
+    ]
+  },
+  "serviceInfo": {
+    "serviceType": [
+      ""
+    ]
   }
-]
+}

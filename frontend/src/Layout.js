@@ -34,8 +34,6 @@ const Layout = ({ mainUser }) => {
       const userId = pathMatch[1];
       const fetchProfileUserName = async () => {
         try {
-          const mainUserDataArray = await getMainUser();
-          const mainUser = mainUserDataArray[0];
           if (mainUser && userId === mainUser.id) {
             setProfileUserName(mainUser.nickname);
           } else {
@@ -51,7 +49,7 @@ const Layout = ({ mainUser }) => {
     } else {
       setProfileUserName(null);
     }
-  }, [location]);
+  }, [location, mainUser]);
 
   const menuItems = [
     { text: 'Home', path: '/' },

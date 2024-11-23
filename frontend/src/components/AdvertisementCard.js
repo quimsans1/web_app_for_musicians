@@ -12,15 +12,20 @@ import {
 } from '@mui/material';
 import MessageIcon from '@mui/icons-material/Message';
 import { getUserById } from '../services/userService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 const AdvertisementsCard = ({ ad, mainUser }) => {
   const { id, userId, title, description, location, image, type } = ad;
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const locationURL = useLocation();
+  // --- ADJUST AD WIDTH ---
+  const isProfilePage = locationURL.pathname.includes('profile');
+  const gridSize = isProfilePage ? 12 : 4;
 
-  // Fetch user data
+  // --- GET USER DATA ---
   useEffect(() => {
     if (userId === mainUser.id) {
       setUser(mainUser);
@@ -37,10 +42,11 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
     }
   }, [userId, mainUser]);
 
-  // Handlers for modal
+  // --- MODAL VIEW ---
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  // --- CHAT CLICK ---
   const handleChatClick = (e) => {
     e.stopPropagation(); // Evita que se dispare otro evento
     navigate('/chats', { state: { selectedChatId: userId } }); // Navega a la página de chats con el ID del usuario
@@ -48,7 +54,7 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
 
   return (
     <>
-      <Grid item xs={12} md={6} lg={4}>
+      <Grid item xs={12} md={12} lg={gridSize}>
         {/* ADVERTISEMENT CARD */}
         <Card
           onClick={handleOpenModal}
@@ -95,7 +101,7 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
               </Typography>
             </div>
 
-            {user && (
+            {user && !isProfilePage && (
               <div
                 style={{
                   position: 'absolute',
@@ -103,16 +109,53 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
                   left: '165px',
                   display: 'flex',
                   alignItems: 'center',
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease-in-out',
+                }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Detiene la propagación del evento
+                  navigate(`/profile/${user.id}`); // Navega a la página de perfil del usuario
                 }}
               >
-                <Avatar
-                  src={user.profilePicture}
-                  alt={user.nickname}
-                  sx={{ width: 30, height: 30, marginRight: '8px' }}
-                />
-                <Typography variant="subtitle2" color="textSecondary">
-                  {user.nickname}
-                </Typography>
+                {/* Contenedor para hover sincronizado */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    transition: 'transform 0.3s ease-in-out, color 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.2)', // Escala el contenedor completo
+                    },
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.2)';
+                    e.currentTarget.style.color = 'blue';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.color = '';
+                  }}
+                >
+                  <Avatar
+                    src={user.profilePicture}
+                    alt={user.nickname}
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      transition: 'transform 0.3s ease-in-out',
+                    }}
+                  />
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    sx={{
+                      transition: 'color 0.3s ease-in-out',
+                    }}
+                  >
+                    {user.nickname}
+                  </Typography>
+                </div>
               </div>
             )}
 

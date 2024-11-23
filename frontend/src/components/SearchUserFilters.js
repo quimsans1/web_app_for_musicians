@@ -112,7 +112,7 @@ const SearchUserFilters = ({
         >
           <MenuItem value=""><em>Select Service Type</em></MenuItem>
           <MenuItem value="Production">Production</MenuItem>
-          <MenuItem value="Music Coaching">Music Coaching</MenuItem>
+          <MenuItem value="Music Production">Music Production</MenuItem>
           <MenuItem value="Sound Engineering">Sound Engineering</MenuItem>
         </Select>
       )}

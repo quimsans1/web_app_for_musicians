@@ -31,7 +31,7 @@ const users = [
         ],
         userType: 'Musician',
         musicianInfo: {
-            instruments: ['Guitar', 'Piano'],
+            instruments: ['Drums', 'Bass', 'Violin'],
         },
         groupInfo: {
             groupType: [''],
@@ -63,7 +63,7 @@ const users = [
             instruments: [''],
         },
         groupInfo: {
-            groupType: ['Band'],
+            groupType: ['Band', 'Orchestra'],
         },
         serviceInfo: {
             serviceType: [''],
@@ -71,7 +71,7 @@ const users = [
     },
     {
         id: uuidv4(),
-        nickname: 'ViolinVirtuoso',
+        nickname: 'EmoGirl',
         name: 'Albert Scofield',
         description: 'blablabla',
         profilePicture: 'https://randomuser.me/api/portraits/women/50.jpg',
@@ -439,12 +439,12 @@ router.get('/', (req, res) => {
     }
     if (groupType) {
         filteredUsers = filteredUsers.filter(user => 
-            user.userType === 'Group' && user.groupInfo?.groupType === groupType
+            user.userType === 'Group' && user.groupInfo?.groupType.includes(groupType)
         );
     }
     if (serviceType) {
         filteredUsers = filteredUsers.filter(user => 
-            user.userType === 'Service' && user.serviceInfo?.serviceType === serviceType
+            user.userType === 'Service' && user.serviceInfo?.serviceType.includes(serviceType)
         );
     }
 

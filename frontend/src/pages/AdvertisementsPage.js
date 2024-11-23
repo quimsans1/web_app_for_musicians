@@ -4,18 +4,11 @@ import {
   Box,
   Grid,
   Button,
-  Modal,
-  TextField,
-  Typography,
   Snackbar,
   Alert,
-  Chip,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
 } from '@mui/material';
 import AdvertisementCard from '../components/AdvertisementCard';
+import CreateAdvertisementModal from '../components/CreateAdvertisementModal';
 
 const AdvertisementsPage = ({ mainUser }) => {
   const [advertisements, setAdvertisements] = useState([]);
@@ -60,10 +53,7 @@ const AdvertisementsPage = ({ mainUser }) => {
     }
 
     try {
-      console.log('Form values:', formValues);
       const newAd = await createAdvertisement(formValues);
-      console.log('Nuevo anuncio creado:', newAd);
-
       setAdvertisements((prev) => [...prev, newAd]);
       setIsModalOpen(false); // Cierra el modal
       setSuccessSnackbarOpen(true); // Mostrar mensaje de éxito
@@ -87,100 +77,14 @@ const AdvertisementsPage = ({ mainUser }) => {
         ))}
       </Grid>
 
-      {/* Modal para crear advertisement */}
-      <Modal
-        open={isModalOpen}
+      <CreateAdvertisementModal
+        isOpen={isModalOpen}
         onClose={handleCloseModal}
-        aria-labelledby="create-advertisement-modal"
-        aria-describedby="create-advertisement-form"
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            width: 400,
-          }}
-        >
-          <Typography variant="h6" component="h2" gutterBottom>
-            Create Advertisement
-          </Typography>
-          <TextField
-            label="Title"
-            name="title"
-            fullWidth
-            margin="normal"
-            value={formValues.title}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Description"
-            name="description"
-            fullWidth
-            margin="normal"
-            value={formValues.description}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Image URL"
-            name="image"
-            fullWidth
-            margin="normal"
-            value={formValues.image}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Link (optional)"
-            name="link"
-            fullWidth
-            margin="normal"
-            value={formValues.link}
-            onChange={handleChange}
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Location</InputLabel>
-            <Select
-              label="Location"
-              name="location"
-              value={formValues.location}
-              onChange={handleChange}
-            >
-              <MenuItem value="Barcelona, Spain">Barcelona, Spain</MenuItem>
-              <MenuItem value="Madrid, Spain">Madrid, Spain</MenuItem>
-              <MenuItem value="Valencia, Spain">Valencia, Spain</MenuItem>
-            </Select>
-          </FormControl>
+        formValues={formValues}
+        onChange={handleChange}
+        onPublish={handlePublish}
+      />
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Type</InputLabel>
-            <Select
-              label="Type"
-              name="type"
-              value={formValues.type}
-              onChange={handleChange}
-            >
-              <MenuItem value="Offer">Offer</MenuItem>
-              <MenuItem value="Event">Event</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Box sx={{ marginTop: 2, textAlign: 'right' }}>
-            <Button variant="outlined" onClick={handleCloseModal} sx={{ marginRight: 1 }}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" onClick={handlePublish}>
-              Publish
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-
-      {/* Snackbar para éxito */}
       <Snackbar
         open={successSnackbarOpen}
         autoHideDuration={4000}
@@ -192,7 +96,6 @@ const AdvertisementsPage = ({ mainUser }) => {
         </Alert>
       </Snackbar>
 
-      {/* Snackbar para error */}
       <Snackbar
         open={errorSnackbarOpen}
         autoHideDuration={4000}

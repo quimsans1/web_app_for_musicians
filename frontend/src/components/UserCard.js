@@ -93,7 +93,7 @@ const UserCard = ({ user }) => {
                   height: '24px',
                   borderColor: '#1e88e5',
                   color: '#1e88e5',
-                  backgroundColor: 'white',
+                  backgroundColor: 'transparent',
                   fontSize: '12px',
                   fontWeight: 'bold',
                 }}
@@ -124,7 +124,7 @@ const UserCard = ({ user }) => {
           </div>
         </div>
 
-        {/* MUSIC STYLES, INSTRUMENTS & LANGUAGES */}
+        {/* USER INFORMATION */}
         <div style={{ marginTop: 10 }}>
           {/* Mostrar música estilos */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
@@ -177,6 +177,23 @@ const UserCard = ({ user }) => {
                 <Typography>
                   {user.groupInfo.groupType?.length > 0
                     ? user.groupInfo.groupType.join(', ')
+                    : 'No group type'}
+                </Typography>
+              </div>
+            ) : user.userType === 'Service' ? (
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <MusicNoteIcon
+                  className="icon"
+                  sx={{
+                    fontSize: '19px',
+                    marginRight: '4px',
+                    color: 'gray',
+                    transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
+                  }}
+                />
+                <Typography>
+                  {user.serviceInfo.serviceType?.length > 0
+                    ? user.serviceInfo.serviceType.join(', ')
                     : 'No group type'}
                 </Typography>
               </div>

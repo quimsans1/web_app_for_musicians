@@ -30,9 +30,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { getUserById } from '../services/userService';
 import { getAdvertisements } from '../services/advertisementsService';
 import AdvertisementCard from '../components/AdvertisementCard';
+import EditProfileForm from '../components/EditProfileForm';
+import { updateMainUser } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 
-const ProfilePage = ({ mainUser }) => {
+const ProfilePage = ({ mainUser, getMainUserAgain }) => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
@@ -40,8 +42,10 @@ const ProfilePage = ({ mainUser }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userAdvertisements, setUserAdvertisements] = useState([]);
   const [userType, setUserType] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // GET USER INFORMATION
+  // --- GET USER INFORMATION ---
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -65,7 +69,7 @@ const ProfilePage = ({ mainUser }) => {
     fetchUser();
   }, [userId, mainUser]);
 
-  // Get ADVERTISEMENTS of User
+  // --- GET ADVERTISEMENTS OF USER ---
   useEffect(() => {
     if (user) {
       const fetchAdvertisements = async () => {
@@ -78,7 +82,10 @@ const ProfilePage = ({ mainUser }) => {
     }
   }, [user, userId]);
 
+  // -- HANDLE FAVORITE BUTTON---
   const handleFavoriteToggle = () => setIsFavorited(!isFavorited);
+  
+  // -- HANDLE GALLERY DIALOG---
   const handleDialogOpen = (index) => {
     setCurrentImageIndex(index);
     setModalOpen(true);
@@ -87,6 +94,7 @@ const ProfilePage = ({ mainUser }) => {
   const handleNextImage = () => setCurrentImageIndex((currentImageIndex + 1) % user.photos.length);
   const handlePreviousImage = () => setCurrentImageIndex((currentImageIndex + user.photos.length - 1) % user.photos.length);
 
+  // -- HANDLE LINK ICON ---
   const getLinkIcon = (url) => {
     if (url.includes('youtube.com')) return <YouTubeIcon color="primary" />;
     if (url.includes('instagram.com')) return <InstagramIcon color="primary" />;
@@ -94,13 +102,29 @@ const ProfilePage = ({ mainUser }) => {
     return <LanguageIcon />;
   };
 
-  const navigate = useNavigate();
-
+  // -- HANDLE CHAT BUTTON ---
   const handleChatClick = (e) => {
     e.stopPropagation(); // Evita que se dispare el evento de clic en la tarjeta
     navigate('/chats', { state: { selectedChatId: user.id } }); // Navega a la página de chats con el ID del usuario
   };
 
+  // -- EDIT BUTTON ---
+  const handleEditModalClose = () => setEditModalOpen(false);
+
+  const handleEditSave = async (updatedUser) => {
+    try {
+      const response = await updateMainUser(updatedUser); // Envia el PUT al backend
+      //getMainUserAgain(response.user)
+      console.log('response', response)
+      setUser(updatedUser); // Actualiza el estado del usuario
+      getMainUserAgain(true);
+      setEditModalOpen(false); // Cierra el modal de edición
+    } catch (error) {
+      console.error('Error al guardar los cambios:', error);
+    }
+  };
+
+  // --- LOADIN USER ---
   if (!user) return <div>Loading user...</div>; // Més currat
 
   return (
@@ -190,6 +214,16 @@ const ProfilePage = ({ mainUser }) => {
               </Box>
             )}
           </Box>
+          {userId === mainUser.id && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => setEditModalOpen(true)}
+              sx={{ marginTop: 2 }}
+            >
+              Edit Profile
+            </Button>
+          )}
           {/* PERSONAL INFORMATION */}
           <Box sx={{ position: 'relative', textAlign: 'left', width: '49%', float: 'right' }}>
             <Card sx={{ padding: 3, marginTop: 0.2 }}>
@@ -326,10 +360,10 @@ const ProfilePage = ({ mainUser }) => {
       {userAdvertisements.length > 0 && (
         <Box sx={{ marginTop: 4, width: '50%', margin: 'auto', padding: 1.2, float: 'left' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Advertisements</Typography>
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             {userAdvertisements.map((advertisement) => (
-              <Grid item xs={12} md={12} lg={12} key={advertisement.id}>
-                <AdvertisementCard key={advertisement.id} ad={advertisement} mainUser={mainUser} />
+              <Grid item xs={12} key={advertisement.id}>
+                <AdvertisementCard ad={advertisement} mainUser={mainUser} />
               </Grid>
             ))}
           </Grid>
@@ -374,6 +408,21 @@ const ProfilePage = ({ mainUser }) => {
           </IconButton>
         </DialogContent>
       </Dialog>
+      
+      {/* EDIT MODAL */}
+      <Dialog open={editModalOpen} onClose={handleEditModalClose} maxWidth="md" fullWidth>
+        <DialogContent>
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            Edit Profile
+          </Typography>
+          <EditProfileForm
+            user={mainUser}
+            onClose={handleEditModalClose}
+            onSave={handleEditSave}
+          />
+        </DialogContent>
+      </Dialog>
+
     </Box>
   );
 };
