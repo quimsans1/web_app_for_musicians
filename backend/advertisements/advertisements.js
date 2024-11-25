@@ -6,7 +6,8 @@ const { users } = require('../users/users');
 const { readMainUser } = require('../mainUser/mainUser');
 
 const router = express.Router();
-
+const mainUser = readMainUser();
+console.log('TROBA MAIN USER', mainUser)
 // Contenido inicial (amb UUIDs generats dinàmicament per cada reinici)
 const initialAdvertisements = [
   { 
@@ -108,24 +109,26 @@ router.get('/:id', (req, res) => {
 
 // Ruta per crear un nou advertisement
 router.post('/', (req, res) => {
+  console.log('REQ.BODY', req.body);
+
+  const mainUser = readMainUser(); 
+
   const { title, description, location, type, image, link } = req.body;
 
+  // Verifica si faltan campos obligatorios
   if (!title || !description || !location || !type || !image || !link) {
-    return res.status(400).json({ message: 'Faltan campos obligatorios' });
-  }
-  
-  console.log('MAIN USER', readMainUser()); // Debugging to check mainUser
-  
-  // Correct usage: Call readMainUser() to get the mainUser data
-  const mainUser = readMainUser();
-  
-  if (!mainUser || !mainUser.length) {
-    return res.status(404).json({ message: 'Main user not found' });
+    return res.status(400).json({ message: 'Required fields are missing' });
   }
 
+  // Verifica si el mainUser es válido
+  if (!mainUser || Object.keys(mainUser).length === 0) {
+    return res.status(404).json({ message: 'Main user not found in Advertisements.js' });
+  }
+
+  // Crea el nuevo anuncio
   const newAdvertisement = {
-    id: uuidv4(), // Generate a new UUID for the advertisement
-    userId: mainUser[0].id, // Access the first user object
+    id: uuidv4(),
+    userId: mainUser.id, // Cambia a `mainUser.id` porque es un objeto
     title,
     description,
     location,
@@ -134,11 +137,14 @@ router.post('/', (req, res) => {
     link,
   };
 
+  // Save Advertisement
   const advertisements = readAdvertisements();
   advertisements.push(newAdvertisement);
   writeAdvertisements(advertisements);
 
+  // Devuelve el nuevo anuncio como respuesta
   res.status(201).json(newAdvertisement);
 });
+
 
 module.exports = router;

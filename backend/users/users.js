@@ -34,10 +34,10 @@ const users = [
             instruments: ['Drums', 'Bass', 'Violin'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },
     {
@@ -60,13 +60,13 @@ const users = [
         ],
         userType: 'Group',
         musicianInfo: {
-            instruments: [''],
+            instruments: [],
         },
         groupInfo: {
             groupType: ['Band', 'Orchestra'],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },
     {
@@ -89,10 +89,10 @@ const users = [
         ],
         userType: 'Service',
         musicianInfo: {
-            instruments: [''],
+            instruments: [],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
             serviceType: ['Music Production'],
@@ -121,10 +121,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },
     {
@@ -150,10 +150,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },
     {
@@ -179,10 +179,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },
     {
@@ -208,10 +208,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     },{
         id: uuidv4(),
@@ -236,10 +236,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -265,10 +265,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -294,10 +294,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -323,10 +323,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -352,10 +352,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -381,10 +381,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
     ,{
@@ -410,10 +410,10 @@ const users = [
             instruments: ['Guitar', 'Piano'],
         },
         groupInfo: {
-            groupType: [''],
+            groupType: [],
         },
         serviceInfo: {
-            serviceType: [''],
+            serviceType: [],
         }
     }
 ];

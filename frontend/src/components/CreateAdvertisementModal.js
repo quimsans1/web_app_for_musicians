@@ -38,7 +38,7 @@ const CreateAdvertisementModal = ({
           width: 400,
         }}
       >
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
           Create Advertisement
         </Typography>
         <TextField

@@ -53,13 +53,14 @@ const AdvertisementsPage = ({ mainUser }) => {
     }
 
     try {
+      console.log('formValues', formValues)
       const newAd = await createAdvertisement(formValues);
       setAdvertisements((prev) => [...prev, newAd]);
       setIsModalOpen(false); // Cierra el modal
       setSuccessSnackbarOpen(true); // Mostrar mensaje de éxito
       setFormValues({ title: '', location: '', type: '', image: '', description: '', link: '' }); // Reinicia el formulario
     } catch (error) {
-      console.error('Error al crear el advertisement:', error);
+      console.error('Error al crear el advertisement (Ad Page):', error);
     }
   };
 
@@ -89,7 +90,10 @@ const AdvertisementsPage = ({ mainUser }) => {
         open={successSnackbarOpen}
         autoHideDuration={4000}
         onClose={handleSuccessSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{
+          vertical: 'bottom',  // Position it at the top of the screen
+          horizontal: 'center',  // Center it horizontally
+        }}
       >
         <Alert onClose={handleSuccessSnackbarClose} severity="success" sx={{ width: '100%' }}>
           Advertisement created successfully!

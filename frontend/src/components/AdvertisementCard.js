@@ -16,7 +16,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const AdvertisementsCard = ({ ad, mainUser }) => {
-  const { id, userId, title, description, location, image, type } = ad;
+  const { userId, title, description, location, image, type } = ad;
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();

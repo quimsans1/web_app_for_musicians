@@ -15,6 +15,8 @@ import {
   DialogContent,
   ImageList,
   ImageListItem,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -44,6 +46,10 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
   const [userType, setUserType] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [alertOpen, setAlertOpen] = useState(false);        // For controlling the Snackbar visibility
+  const [alertMessage, setAlertMessage] = useState("");      // For setting the message
+  const [alertSeverity, setAlertSeverity] = useState("success"); // For controlling the severity (success or error)
 
   // --- GET USER INFORMATION ---
   useEffect(() => {
@@ -112,17 +118,34 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
   const handleEditModalClose = () => setEditModalOpen(false);
 
   const handleEditSave = async (updatedUser) => {
+    const areUsersEqual = JSON.stringify(updatedUser) === JSON.stringify(mainUser);
     try {
-      const response = await updateMainUser(updatedUser); // Envia el PUT al backend
-      //getMainUserAgain(response.user)
-      console.log('response', response)
-      setUser(updatedUser); // Actualiza el estado del usuario
-      getMainUserAgain(true);
-      setEditModalOpen(false); // Cierra el modal de edición
+      if (!areUsersEqual) {
+        const response = await updateMainUser(updatedUser); // Envia el PUT al backend
+        console.log('response', response);
+        setUser(updatedUser); // Actualiza el estado del usuario
+        getMainUserAgain(true);
+        setEditModalOpen(false); // Cierra el modal de edición
+      
+        // Set the success alert message
+        setAlertMessage("Profile updated successfully!");
+        setAlertSeverity("success");
+        setAlertOpen(true); // Show the alert
+      } else {
+        setAlertMessage("No changes were made.");
+        setAlertSeverity("error");
+        setAlertOpen(true); // Show the alert
+      }
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
+      
+      // Set the error alert message
+      setAlertMessage("Failed to update profile!");
+      setAlertSeverity("error");
+      setAlertOpen(true); // Show the alert
     }
   };
+  
 
   // --- LOADIN USER ---
   if (!user) return <div>Loading user...</div>; // Més currat
@@ -213,17 +236,18 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                 </Button>
               </Box>
             )}
+            {userId === mainUser.id && (
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setEditModalOpen(true)}
+                sx={{ marginTop: 15 }}
+              >
+                Edit Profile
+              </Button>
+            )}
           </Box>
-          {userId === mainUser.id && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setEditModalOpen(true)}
-              sx={{ marginTop: 2 }}
-            >
-              Edit Profile
-            </Button>
-          )}
+
           {/* PERSONAL INFORMATION */}
           <Box sx={{ position: 'relative', textAlign: 'left', width: '49%', float: 'right' }}>
             <Card sx={{ padding: 3, marginTop: 0.2 }}>
@@ -341,7 +365,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
             >
               <img
                 src={photo}
-                alt={`Photo ${index + 1}`}
+                alt={`Gallery Item ${index + 1}`}
                 style={{
                   width: '100%',
                   height: '200px',
@@ -389,7 +413,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
 
           <img
             src={user.photos[currentImageIndex]}
-            alt={`Photo ${currentImageIndex + 1}`}
+            alt={`Gallery item ${currentImageIndex + 1}`}
             style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }}
           />
 
@@ -409,20 +433,37 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
         </DialogContent>
       </Dialog>
       
-      {/* EDIT MODAL */}
+      {/* EDIT PROFILE - FORM MODAL */}
       <Dialog open={editModalOpen} onClose={handleEditModalClose} maxWidth="md" fullWidth>
         <DialogContent>
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" sx={{ marginBottom: 4, fontWeight: 'bold' }}>
             Edit Profile
           </Typography>
           <EditProfileForm
-            user={mainUser}
+            mainUser={mainUser}
             onClose={handleEditModalClose}
             onSave={handleEditSave}
           />
         </DialogContent>
       </Dialog>
 
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{
+          vertical: 'bottom',  // Position it at the top of the screen
+          horizontal: 'center',  // Center it horizontally
+        }}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

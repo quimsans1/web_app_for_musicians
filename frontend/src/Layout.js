@@ -3,13 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline, Drawer, List, ListItem, ListItemText, Typography, Toolbar, AppBar, IconButton } from '@mui/material';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getUserById, getMainUser } from './services/userService';
+import { getUserById } from './services/userService';
 import SearchUserFilters from './components/SearchUserFilters';
-
-const drawerWidth = 240;
+//import PageNotFound from './pages/PageNotFound';
 
 const Layout = ({ mainUser }) => {
-  const [userMain, setUserMain] = useState(null);
+  const drawerWidth = 240;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,10 +22,6 @@ const Layout = ({ mainUser }) => {
   const [serviceTypeFilter, setServiceTypeFilter] = useState('');
 
   const [profileUserName, setProfileUserName] = useState(null);
-
-  useEffect(() => {
-    setUserMain(mainUser);
-  }, [mainUser]);
 
   useEffect(() => {
     const pathMatch = location.pathname.match(/^\/profile\/([a-zA-Z0-9-]+)$/);
@@ -56,7 +51,7 @@ const Layout = ({ mainUser }) => {
     { text: 'Advertisements', path: '/advertisements' },
     { text: 'Chats', path: '/chats' },
     { text: 'News', path: '/news' },
-    { text: 'Profile', path: `/profile/${userMain?.id || ''}` },
+    { text: 'Profile', path: `/profile/${mainUser?.id || ''}` },
   ];
 
   return (

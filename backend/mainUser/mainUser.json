@@ -1,23 +1,23 @@
 {
-  "id": "a20256da-45b8-426a-81ed-9ebda2e23f2e",
+  "id": "70e0e0ff-9711-43f5-82c6-ca1aa0f94505",
   "nickname": "GuitarPlayer99",
-  "name": "Marc Vernis",
+  "name": "lolito fernandezzz",
   "description": "I'm a guitarist from Barcelona and I like to play guitar so much!",
-  "profilePicture": "blob:http://localhost:3000/6eed6f4a-9b41-469c-8c16-6b4a440e5c97",
-  "backgroundImage": "https://img2-azrcdn.newser.com/image/1460855-17-20230305192226-remember-90s-band-live-things-took-nasty-turn.jpeg",
+  "profilePicture": "blob:http://localhost:3000/e4035054-d1e1-49dc-ae8e-60987983d453",
+  "backgroundImage": "blob:http://localhost:3000/e4bd2531-7d8f-44d2-9b53-d164c58c66ef",
   "photos": [
     "https://example.com/photo1.jpg",
     "https://example.com/photo2.jpg"
   ],
   "musicStyles": [
     "Blues",
-    "Funk"
+    "Funk",
+    "Jazz"
   ],
   "languages": [
-    "English",
-    "Spanish"
+    "English"
   ],
-  "location": "London, UK",
+  "location": "New York, USA",
   "links": [
     {
       "url": "https://youtube.com/user1"
@@ -30,17 +30,19 @@
   "musicianInfo": {
     "instruments": [
       "Drums",
-      "Bass"
+      "Bass",
+      "Violin"
     ]
   },
   "groupInfo": {
     "groupType": [
-      ""
+      "Choir"
     ]
   },
   "serviceInfo": {
     "serviceType": [
-      ""
+      "Music Production",
+      "Sound Engineering"
     ]
   }
 }

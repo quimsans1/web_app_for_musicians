@@ -51,7 +51,7 @@ export const getMainUser = async () => {
 
 // Function to update the main user
 export const updateMainUser = async (updatedUser) => {
-  console.log('updatedMainUser', updatedUser);  // Log updated user data
+  console.log('service updatedUser:', updatedUser);  // Log updated user data
 
   try {
     // Create FormData object to handle file upload
@@ -94,7 +94,7 @@ export const updateMainUser = async (updatedUser) => {
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
-
+    console.log('service formData:', formData)
     // Make the PUT request with the FormData
     const response = await axios.put(`${API_URL}/api/mainUser`, formData, {
       headers: {

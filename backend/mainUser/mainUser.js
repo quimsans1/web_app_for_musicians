@@ -55,10 +55,10 @@ const initializeMainUser = () => {
     userType: 'Musician',
     musicianInfo: { instruments: ['Drums', 'Bass'] },
     groupInfo: {
-      groupType: [''],
+      groupType: [],
     },
     serviceInfo: {
-      serviceType: [''],
+      serviceType: [],
     }
   };
 

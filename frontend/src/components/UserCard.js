@@ -5,7 +5,6 @@ import MessageIcon from '@mui/icons-material/Message';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MusicNoteIcon from '@mui/icons-material/MusicNote'; // Nota musical
 import PlaceIcon from '@mui/icons-material/Place';
-import LanguageIcon from '@mui/icons-material/Language'; // Mundo
 import PublicIcon from '@mui/icons-material/Public';
 
 const UserCard = ({ user }) => {
