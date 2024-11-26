@@ -8,6 +8,7 @@ const fs = require('fs'); // To interact with the filesystem
 const usersRouter = require('./users/users').router;
 const advertisementRouter = require('./advertisements/advertisements');
 const mainUserRouter = require('./mainUser/mainUser').router;
+const favoritesRouter = require('./favorites/favorites').router;
 
 const app = express();
 const server = http.createServer(app);
@@ -45,6 +46,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true })); // For URL-encod
 app.use('/api/users', usersRouter);
 app.use('/api/advertisements', advertisementRouter);
 app.use('/api/mainUser', mainUserRouter);
+app.use('/api/favorites', favoritesRouter);
 
 // Serve static files from "uploads" folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

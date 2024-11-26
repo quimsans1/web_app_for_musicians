@@ -7,7 +7,7 @@ const { readMainUser } = require('../mainUser/mainUser');
 
 const router = express.Router();
 const mainUser = readMainUser();
-console.log('TROBA MAIN USER', mainUser)
+
 // Contenido inicial (amb UUIDs generats dinàmicament per cada reinici)
 const initialAdvertisements = [
   { 

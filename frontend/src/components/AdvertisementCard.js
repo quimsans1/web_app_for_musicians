@@ -13,8 +13,6 @@ import {
 import MessageIcon from '@mui/icons-material/Message';
 import { getUserById } from '../services/userService';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-
 const AdvertisementsCard = ({ ad, mainUser }) => {
   const { userId, title, description, location, image, type } = ad;
   const [user, setUser] = useState(null);

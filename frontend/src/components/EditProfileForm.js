@@ -217,6 +217,30 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
         sx={{ marginBottom: 2 }}
       />
 
+      {/* LOCATION */}
+      <Autocomplete
+        options={locationsList}
+        value={formData.location}
+        onChange={(event, newValue) => handleChange('location', newValue)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Location"
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
+        )}
+      />
+
+      {/* DESCRIPTION */}
+      <TextField
+        label="Description"
+        value={formData.description}
+        onChange={(e) => handleChange('description', e.target.value)}
+        fullWidth
+        sx={{ marginBottom: 2 }}
+      />
+
       {/* USER TYPE */}
       <FormControl fullWidth sx={{ marginBottom: 2 }}>
         <InputLabel id="mainUser-type-label">User Type</InputLabel>
@@ -328,30 +352,6 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
           </Box>
         </>
       )}
-
-      {/* LOCATION */}
-      <Autocomplete
-        options={locationsList}
-        value={formData.location}
-        onChange={(event, newValue) => handleChange('location', newValue)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Location"
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          />
-        )}
-      />
-
-      {/* DESCRIPTION */}
-      <TextField
-        label="Description"
-        value={formData.description}
-        onChange={(e) => handleChange('description', e.target.value)}
-        fullWidth
-        sx={{ marginBottom: 2 }}
-      />
 
       {/* MUSIC STYLES */}
       <Typography variant="h6" sx={{ marginTop: 3 }}>

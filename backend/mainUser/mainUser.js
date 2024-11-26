@@ -82,7 +82,7 @@ router.get('/', (req, res) => {
 // Edit Main User
 router.put('/', upload, (req, res) => {
   const updatedUser = req.body;
-  console.log('UPDATED USER', updatedUser);
+  //console.log('UPDATED USER', updatedUser);
 
   // Handle profile picture upload
   if (req.file) {
@@ -135,7 +135,7 @@ router.put('/', upload, (req, res) => {
     updatedUser.serviceInfo = { serviceType };
   }
 
-  console.log('FORMATTED UPDATED USER', updatedUser);  // Log the final formatted user data for debugging
+  //console.log('FORMATTED UPDATED USER', updatedUser);  // Log the final formatted user data for debugging
 
   try {
     const currentUser = readMainUser();

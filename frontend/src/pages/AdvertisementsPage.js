@@ -6,6 +6,8 @@ import {
   Button,
   Snackbar,
   Alert,
+  CircularProgress,
+  Typography,
 } from '@mui/material';
 import AdvertisementCard from '../components/AdvertisementCard';
 import CreateAdvertisementModal from '../components/CreateAdvertisementModal';
@@ -63,6 +65,30 @@ const AdvertisementsPage = ({ mainUser }) => {
       console.error('Error al crear el advertisement (Ad Page):', error);
     }
   };
+
+  if (advertisements.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5', // Fondo suave
+        }}
+      >
+        <CircularProgress
+          size={60}
+          thickness={5}
+          sx={{ color: '#1e88e5', marginBottom: 2 }} // Personaliza el color y tamaño
+        />
+        <Typography variant="h6" color="textSecondary">
+          Loading Advertisements...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ padding: 3 }}>

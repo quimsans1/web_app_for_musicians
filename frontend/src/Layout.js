@@ -47,7 +47,7 @@ const Layout = ({ mainUser }) => {
   }, [location, mainUser]);
 
   const menuItems = [
-    { text: 'Home', path: '/' },
+    { text: 'HomePage', path: '/' },
     { text: 'Advertisements', path: '/advertisements' },
     { text: 'Chats', path: '/chats' },
     { text: 'News', path: '/news' },

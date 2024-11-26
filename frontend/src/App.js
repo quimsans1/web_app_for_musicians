@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home'; // Página principal
+import HomePage from './pages/HomePage'; // Página principal
 import ProfilePage from './pages/ProfilePage';
 import AdvertisementsPage from './pages/AdvertisementsPage';
 import ChatsPage from './pages/ChatsPage';
@@ -42,7 +42,7 @@ function App() {
     mainUser && (
       <Routes>
         <Route path="/" element={<Layout mainUser={mainUser}/>}>
-          <Route index element={<Home />} />
+          <Route index element={<HomePage />} />
           <Route
             path="profile/:userId"
             element={<ProfilePage mainUser={mainUser} getMainUserAgain={setGetMainUserAgain} />} />
