@@ -25,3 +25,30 @@ export const createAdvertisement = async (advertisement) => {
     throw error; // Llenca l'error per a que el component pugui gestionar-lo
   }
 };
+
+export const deleteAdvertisementById = async (id) => {
+  try {
+      const response = await axios.delete(`${API_URL}/api/advertisements`, {
+        data: { [id]: "" }
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error deleting advertisement:', error.response?.data || error.message);
+      throw error;
+  }
+};
+
+/**
+ * Elimina un anuncio por ID
+ * @param {number} id - ID del anuncio que se desea eliminar
+ * @returns {Promise<Object>} - Respuesta del servidor
+ 
+export const deleteAdvertisementById = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/advertisements/${id}`);
+    return response.data; // Retorna la respuesta del servidor
+  } catch (error) {
+    console.error('Error deleting advertisement:', error);
+    throw error; // Lanza el error para manejarlo donde se llame esta función
+  }
+};*/

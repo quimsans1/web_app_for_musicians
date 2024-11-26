@@ -26,11 +26,12 @@ const AdvertisementsPage = ({ mainUser }) => {
   const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchAdvertisements = async () => {
-      const data = await getAdvertisements();
-      setAdvertisements(data);
-    };
+  const fetchAdvertisements = async () => {
+    const data = await getAdvertisements();
+    setAdvertisements(data);
+  };
+
+  useEffect(() => {    
     fetchAdvertisements();
   }, []);
 
@@ -100,7 +101,12 @@ const AdvertisementsPage = ({ mainUser }) => {
 
       <Grid container spacing={2}>
         {advertisements.map((ad) => (
-          <AdvertisementCard key={ad.id} ad={ad} mainUser={mainUser} />
+          <AdvertisementCard
+            key={ad.id}
+            ad={ad}
+            mainUser={mainUser}
+            fetchAdvertisements={fetchAdvertisements}
+          />
         ))}
       </Grid>
 

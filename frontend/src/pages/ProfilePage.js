@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Avatar,
@@ -144,17 +144,18 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
     }
   }, [favorites, userId]);
 
+  const fetchAdvertisements = useCallback(async () => {
+    const allAdvertisements = await getAdvertisements();
+    const userAdvertisements = allAdvertisements.filter(adv => adv.userId === userId);
+    setUserAdvertisements(userAdvertisements);
+  }, [userId]);
+
   // --- GET ADVERTISEMENTS OF USER ---
   useEffect(() => {
-    if (user && Object.keys(user).length > 0) {
-      const fetchAdvertisements = async () => {
-        const allAdvertisements = await getAdvertisements();
-        const userAdvertisements = allAdvertisements.filter(adv => adv.userId === userId);
-        setUserAdvertisements(userAdvertisements);
-      };
+    if (user && Object.keys(user).length > 0) {      
       fetchAdvertisements();
     }
-  }, [user, userId]);
+  }, [user, fetchAdvertisements]);
   
   // -- HANDLE GALLERY DIALOG---
   const handleDialogOpen = (index) => {
@@ -503,7 +504,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
             <Grid container spacing={2}>
               {userAdvertisements.map((advertisement) => (
                 <Grid item xs={12} key={advertisement.id}>
-                  <AdvertisementCard ad={advertisement} mainUser={mainUser} />
+                  <AdvertisementCard ad={advertisement} mainUser={mainUser} fetchAdvertisements={fetchAdvertisements}/>
                 </Grid>
               ))}
             </Grid>
@@ -512,110 +513,110 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
 
         {/* GALLERY IMAGE VIEWER - MODAL */}
         {modalOpen && (
-  <div
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo oscuro semitransparente
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1300,  // Asegura que esté por encima de otros contenidos
-    }}
-    onClick={handleDialogClose}  // Cierra el modal cuando haces clic fuera del contenido
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}  // Evita que se cierre el modal al hacer clic dentro del contenido
-      style={{
-        position: 'relative',
-        textAlign: 'center',
-        padding: 0,
-        backgroundColor: 'transparent',  // Fondo transparente para el contenido del modal
-        width: '70vw', // Limita el ancho del modal al 70% de la ventana
-        height: '80vh', // Limita la altura al 80% de la ventana
-        overflow: 'hidden', // Evita que el contenido se desborde
-        borderRadius: '8px',
-        display: 'flex',
-        justifyContent: 'center', // Centra el contenido horizontalmente
-        alignItems: 'center', // Centra el contenido verticalmente
-        aspectRatio: '16/9', // Relación de aspecto para el contenedor
-      }}
-    >
-      {/* Botón de cerrar en la esquina superior derecha */}
-      <IconButton
-        onClick={handleDialogClose}
-        sx={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente para el botón
-          color: 'white',
-          zIndex: 3, // Asegura que el botón de cierre esté encima de la imagen
-        }}
-      >
-        <CloseIcon />  {/* Icono de cierre (X) */}
-      </IconButton>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo oscuro semitransparente
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1300,  // Asegura que esté por encima de otros contenidos
+            }}
+            onClick={handleDialogClose}  // Cierra el modal cuando haces clic fuera del contenido
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}  // Evita que se cierre el modal al hacer clic dentro del contenido
+              style={{
+                position: 'relative',
+                textAlign: 'center',
+                padding: 0,
+                backgroundColor: 'transparent',  // Fondo transparente para el contenido del modal
+                width: '70vw', // Limita el ancho del modal al 70% de la ventana
+                height: '80vh', // Limita la altura al 80% de la ventana
+                overflow: 'hidden', // Evita que el contenido se desborde
+                borderRadius: '8px',
+                display: 'flex',
+                justifyContent: 'center', // Centra el contenido horizontalmente
+                alignItems: 'center', // Centra el contenido verticalmente
+                aspectRatio: '16/9', // Relación de aspecto para el contenedor
+              }}
+            >
+              {/* Botón de cerrar en la esquina superior derecha */}
+              <IconButton
+                onClick={handleDialogClose}
+                sx={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente para el botón
+                  color: 'white',
+                  zIndex: 3, // Asegura que el botón de cierre esté encima de la imagen
+                }}
+              >
+                <CloseIcon />  {/* Icono de cierre (X) */}
+              </IconButton>
 
-      {/* Botón de flecha izquierda */}
-      <IconButton
-        onClick={handlePreviousImage}
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '10px',
-          transform: 'translateY(-50%)',  // Centra verticalmente
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
-          color: 'white',
-          zIndex: 2, // Asegura que la flecha esté encima de la imagen
-        }}
-      >
-        <ArrowBackIosIcon sx={{ position: 'relative', left: '4px' }} />
-      </IconButton>
+              {/* Botón de flecha izquierda */}
+              <IconButton
+                onClick={handlePreviousImage}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '10px',
+                  transform: 'translateY(-50%)',  // Centra verticalmente
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
+                  color: 'white',
+                  zIndex: 2, // Asegura que la flecha esté encima de la imagen
+                }}
+              >
+                <ArrowBackIosIcon sx={{ position: 'relative', left: '4px' }} />
+              </IconButton>
 
-      {/* Contenedor de la imagen */}
-      <div
-        style={{
-          position: 'relative',
-          width: '100%', // El contenedor ocupa el 100% del ancho disponible
-          height: '100%', // El contenedor ocupa el 100% de la altura disponible
-          display: 'flex',
-          justifyContent: 'center', // Centra la imagen horizontalmente
-          alignItems: 'center', // Centra la imagen verticalmente
-        }}
-      >
-        <img
-          src={user.photos[currentImageIndex]}
-          alt={`Gallery item ${currentImageIndex + 1}`}
-          style={{
-            maxWidth: '100%', // La imagen ocupa el 100% del ancho disponible
-            maxHeight: '100%', // La imagen ocupa el 100% de la altura disponible
-            objectFit: 'contain', // Mantiene la proporción de la imagen y se asegura que quepa en el contenedor sin recortes
-            display: 'block', // Elimina cualquier espacio extra debajo de la imagen
-          }}
-        />
-      </div>
+              {/* Contenedor de la imagen */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%', // El contenedor ocupa el 100% del ancho disponible
+                  height: '100%', // El contenedor ocupa el 100% de la altura disponible
+                  display: 'flex',
+                  justifyContent: 'center', // Centra la imagen horizontalmente
+                  alignItems: 'center', // Centra la imagen verticalmente
+                }}
+              >
+                <img
+                  src={user.photos[currentImageIndex]}
+                  alt={`Gallery item ${currentImageIndex + 1}`}
+                  style={{
+                    maxWidth: '100%', // La imagen ocupa el 100% del ancho disponible
+                    maxHeight: '100%', // La imagen ocupa el 100% de la altura disponible
+                    objectFit: 'contain', // Mantiene la proporción de la imagen y se asegura que quepa en el contenedor sin recortes
+                    display: 'block', // Elimina cualquier espacio extra debajo de la imagen
+                  }}
+                />
+              </div>
 
-      {/* Botón de flecha derecha */}
-      <IconButton
-        onClick={handleNextImage}
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          right: '10px',
-          transform: 'translateY(-50%)',  // Centra verticalmente
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
-          color: 'white',
-          zIndex: 2, // Asegura que la flecha esté encima de la imagen
-        }}
-      >
-        <ArrowForwardIosIcon sx={{ position: 'relative', left: '2px' }} />
-      </IconButton>
-    </div>
-  </div>
-)}
+              {/* Botón de flecha derecha */}
+              <IconButton
+                onClick={handleNextImage}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '10px',
+                  transform: 'translateY(-50%)',  // Centra verticalmente
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
+                  color: 'white',
+                  zIndex: 2, // Asegura que la flecha esté encima de la imagen
+                }}
+              >
+                <ArrowForwardIosIcon sx={{ position: 'relative', left: '2px' }} />
+              </IconButton>
+            </div>
+          </div>
+        )}
 
 
         {/* EDIT PROFILE FORM - MODAL */}

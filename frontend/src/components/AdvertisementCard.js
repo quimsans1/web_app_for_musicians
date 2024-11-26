@@ -12,8 +12,11 @@ import {
 } from '@mui/material';
 import MessageIcon from '@mui/icons-material/Message';
 import { getUserById } from '../services/userService';
+import { deleteAdvertisementById } from '../services/advertisementsService';
 import { useNavigate, useLocation } from 'react-router-dom';
-const AdvertisementsCard = ({ ad, mainUser }) => {
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
   const { userId, title, description, location, image, type } = ad;
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,6 +52,14 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
     e.stopPropagation(); // Evita que se dispare otro evento
     navigate('/chats', { state: { selectedChatId: userId } }); // Navega a la página de chats con el ID del usuario
   };
+
+  const handleDeleteClick = async (e, id) => {
+    e.stopPropagation();
+    // eslint-disable-next-line
+    const response = await deleteAdvertisementById(id);
+    handleCloseModal();
+    fetchAdvertisements();
+  };  
 
   return (
     <>
@@ -229,6 +240,25 @@ const AdvertisementsCard = ({ ad, mainUser }) => {
             <Typography color="textSecondary" variant="body2">
               <strong>Posted by:</strong> {user.nickname}
             </Typography>
+          )}
+
+          {/* DELETE ICON */}
+          {userId === mainUser.id && (
+            <IconButton
+              onClick={(e) => handleDeleteClick(e, ad.id)}
+              sx={{
+                position: 'absolute',
+                top: '8px',
+                right: '8px',
+                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                },
+                color: 'red',
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
           )}
 
           {/* MESSAGE ICON */}

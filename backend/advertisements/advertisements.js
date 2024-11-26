@@ -146,5 +146,44 @@ router.post('/', (req, res) => {
   res.status(201).json(newAdvertisement);
 });
 
+/*router.delete('/advertisements/:id', (req, res) => {
+  console.log('req.params.id', req.params.id)
+  const id = req.params.id;
+  console.log('id', id)
+  
+  const advertisements = readAdvertisements();
+  const index = advertisements.findIndex((ad) => ad.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Advertisement not found' });
+  }
+  advertisements.splice(index, 1);
+  writeAdvertisements(advertisements);
+  res.status(200).json({ message: 'Advertisement deleted successfully' });
+});*/
+
+router.delete('/', (req, res) => {
+  const obj = req.body; // Se espera que el cuerpo de la solicitud contenga el userId
+  const id = Object.keys(obj)[0]; // Obtener la clave del objeto enviado
+
+  const advertisements = readAdvertisements();
+
+  const index = advertisements.findIndex((ad) => ad.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Advertisement not found' });
+  }
+  advertisements.splice(index, 1);
+  writeAdvertisements(advertisements);
+  res.status(200).json({ message: 'Advertisement deleted successfully' });
+  // Comprobar si el userId existe en el array
+  /*const index = advertisements.indexOf(userId);
+  if (index !== -1) {
+      favorites.splice(index, 1);
+      writeFavorites(favorites);
+      res.status(200).json({ message: `User ID ${userId} removed from favorites.` });
+  } else {
+      res.status(404).json({ error: `User ID ${userId} not found in favorites.` });
+  }*/
+});
+
 
 module.exports = router;
