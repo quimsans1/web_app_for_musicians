@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { Box, TextField, Button, List, ListItem, Typography, Paper } from '@mui/material';
 
-const socket = io(process.env.REACT_APP_API_URL); // Conectar al servidor
-
 const ChatRoom = ({ roomId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const messagesEndRef = useRef(null); // Referència per al desplaçament
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Recuperar mensajes del localStorage cuando el componente se carga
+    // Recuperate localSotrage messages
     const storedMessages = JSON.parse(localStorage.getItem(`chat_messages_${roomId}`)) || [];
     setMessages(storedMessages);
 
