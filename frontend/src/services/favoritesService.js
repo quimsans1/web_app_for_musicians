@@ -20,7 +20,7 @@ export const addUserToFavorites = async (userId) => {
 export const deleteUserFromFavorites = async (userId) => {
     try {
         const response = await axios.delete(`${API_URL}/api/favorites`, {
-            data: { [userId]: "" } // El cuerpo debe incluir el ID en este formato
+            data: { [userId]: "" }
         });
         return response.data;
     } catch (error) {

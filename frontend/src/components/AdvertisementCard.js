@@ -16,7 +16,7 @@ import { deleteAdvertisementById } from '../services/advertisementsService';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
+const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements, handleDeleteAlert }) => {
   const { userId, title, description, location, image, type } = ad;
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,8 +49,8 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
 
   // --- CHAT CLICK ---
   const handleChatClick = (e) => {
-    e.stopPropagation(); // Evita que se dispare otro evento
-    navigate('/chats', { state: { selectedChatId: userId } }); // Navega a la página de chats con el ID del usuario
+    e.stopPropagation();
+    navigate('/chats', { state: { selectedChatId: userId } }); // Navigate to chat page by the user ID
   };
 
   const handleDeleteClick = async (e, id) => {
@@ -59,6 +59,7 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
     const response = await deleteAdvertisementById(id);
     handleCloseModal();
     fetchAdvertisements();
+    handleDeleteAlert();
   };  
 
   return (
@@ -122,11 +123,10 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
                   transition: 'transform 0.3s ease-in-out',
                 }}
                 onClick={(e) => {
-                  e.stopPropagation(); // Detiene la propagación del evento
-                  navigate(`/profile/${user.id}`); // Navega a la página de perfil del usuario
+                  e.stopPropagation();
+                  navigate(`/profile/${user.id}`); // Navigate to user profile page
                 }}
               >
-                {/* Contenedor para hover sincronizado */}
                 <div
                   style={{
                     display: 'flex',
@@ -134,7 +134,7 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
                     gap: '8px',
                     transition: 'transform 0.3s ease-in-out, color 0.3s ease-in-out',
                     '&:hover': {
-                      transform: 'scale(1.2)', // Escala el contenedor completo
+                      transform: 'scale(1.2)',
                     },
                   }}
                   onMouseEnter={(e) => {
@@ -250,11 +250,14 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
                 position: 'absolute',
                 top: '8px',
                 right: '8px',
-                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                backgroundColor: 'rgba(255, 0, 0, 0)',
+                transition: 'all 0.3s ease',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                  transform: 'scale(1.1)',
+                  color: '#e53935',
                 },
-                color: 'red',
+                color: 'gray',
               }}
             >
               <DeleteIcon />
@@ -274,7 +277,7 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements }) => {
             <IconButton
               aria-label="send message"
               size="small"
-              onClick={handleChatClick} // Navega a la página de chats
+              onClick={handleChatClick}
               sx={{
                 color: 'gray',
                 transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',

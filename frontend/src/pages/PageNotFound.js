@@ -1,4 +1,3 @@
-// components/PageNotFound.js
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,7 @@ const PageNotFound = () => {
         Oops! Page not found
       </Typography>
       <Typography variant="h6" gutterBottom>
-        The page you are looking for does not exist or has been moved.
+        The page you are looking for does not exist.
       </Typography>
       <Button
         variant="contained"
@@ -29,7 +28,7 @@ const PageNotFound = () => {
         onClick={() => navigate('/')}
         sx={{ mt: 2 }}
       >
-        Volver al inicio
+        Return to Home
       </Button>
     </Box>
   );

@@ -4,13 +4,12 @@ const path = require('path');
 
 const router = express.Router();
 
-// Path to the favorties file
 const filePath = path.join(__dirname, 'favorites.json');
 
 const readFavorites = () => {
   try {
     const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);  // Return the parsed JSON object
+    return JSON.parse(data);
   } catch (error) {
     console.error('Error reading the favorites file:', error);
     return null;
@@ -20,7 +19,7 @@ const readFavorites = () => {
 // Function to write the updated favorites data to the file
 const writeFavorites = (data) => {
   try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));  // Save as a formatted JSON string
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
   } catch (error) {
     console.error('Error writing to the favorites file:', error);
   }
@@ -30,13 +29,8 @@ const writeFavorites = (data) => {
 const initializeFavorites = () => {
   const newFavorites = []
   writeFavorites(newFavorites);
-  console.log('Favorites data initialized with default Array.');
 };
 initializeFavorites();
-// Initialize the favorites at server start
-/*if (!fs.existsSync(filePath)) {
-    
-}*/
   
 
 // Get Favorites
@@ -48,7 +42,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const obj = req.body;
     const userId = Object.keys(obj)[0]
-    console.log('FAVORITE ID FORMATTED', userId);
 
     const favorites = readFavorites();
     favorites.push(userId);
@@ -58,13 +51,10 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/', (req, res) => {
-    const obj = req.body; // Se espera que el cuerpo de la solicitud contenga el userId
-    const userId = Object.keys(obj)[0]; // Obtener la clave del objeto enviado
-    console.log('FAVORITE ID DELETED', userId);
+    const obj = req.body;
+    const userId = Object.keys(obj)[0];
 
-    const favorites = readFavorites(); // Leer el array de favoritos
-
-    // Comprobar si el userId existe en el array
+    const favorites = readFavorites();
     const index = favorites.indexOf(userId);
     if (index !== -1) {
         favorites.splice(index, 1);

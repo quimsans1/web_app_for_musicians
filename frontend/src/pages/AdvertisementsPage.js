@@ -23,8 +23,9 @@ const AdvertisementsPage = ({ mainUser }) => {
     description: '',
     link: '',
   });
-  const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
   const fetchAdvertisements = async () => {
     const data = await getAdvertisements();
@@ -38,8 +39,13 @@ const AdvertisementsPage = ({ mainUser }) => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleSuccessSnackbarClose = () => setSuccessSnackbarOpen(false);
-  const handleErrorSnackbarClose = () => setErrorSnackbarOpen(false);
+  const handleSuccessAlertClose = () => setSuccessAlertOpen(false);
+  const handleErrorAlertClose = () => setErrorAlertOpen(false);
+  const handleDeleteAlertClose = () => setDeleteAlertOpen(false);
+
+  const handleDeleteAlert = () => {
+    setDeleteAlertOpen(true)
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,19 +57,18 @@ const AdvertisementsPage = ({ mainUser }) => {
 
   const handlePublish = async () => {
     if (Object.values(formValues).some((value) => !value.trim())) {
-      setErrorSnackbarOpen(true); // Mostrar mensaje de error
+      setErrorAlertOpen(true);
       return;
     }
 
     try {
-      console.log('formValues', formValues)
       const newAd = await createAdvertisement(formValues);
       setAdvertisements((prev) => [...prev, newAd]);
-      setIsModalOpen(false); // Cierra el modal
-      setSuccessSnackbarOpen(true); // Mostrar mensaje de éxito
-      setFormValues({ title: '', location: '', type: '', image: '', description: '', link: '' }); // Reinicia el formulario
+      setIsModalOpen(false);
+      setSuccessAlertOpen(true);
+      setFormValues({ title: '', location: '', type: '', image: '', description: '', link: '' });
     } catch (error) {
-      console.error('Error al crear el advertisement (Ad Page):', error);
+      console.error('Error creating advertisement:', error);
     }
   };
 
@@ -76,13 +81,13 @@ const AdvertisementsPage = ({ mainUser }) => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100vh',
-          backgroundColor: '#f5f5f5', // Fondo suave
+          backgroundColor: '#f5f5f5',
         }}
       >
         <CircularProgress
           size={60}
           thickness={5}
-          sx={{ color: '#1e88e5', marginBottom: 2 }} // Personaliza el color y tamaño
+          sx={{ color: '#1e88e5', marginBottom: 2 }}
         />
         <Typography variant="h6" color="textSecondary">
           Loading Advertisements...
@@ -93,12 +98,14 @@ const AdvertisementsPage = ({ mainUser }) => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Box sx={{ marginBottom: 2, textAlign: 'right' }}>
-        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+      {/* BUTTON TO CREATE ADVERTISEMENT */}
+      <Box sx={{ marginBottom: 5, textAlign: 'left' }}>
+        <Button variant="outlined" color="primary" onClick={handleOpenModal}>
           Create Advertisement
         </Button>
       </Box>
 
+      {/* ADVERTISEMENT CARDS */}
       <Grid container spacing={2}>
         {advertisements.map((ad) => (
           <AdvertisementCard
@@ -106,10 +113,12 @@ const AdvertisementsPage = ({ mainUser }) => {
             ad={ad}
             mainUser={mainUser}
             fetchAdvertisements={fetchAdvertisements}
+            handleDeleteAlert={handleDeleteAlert}
           />
         ))}
       </Grid>
-
+      
+      {/* MODAL: CREATE AD */}
       <CreateAdvertisementModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -118,28 +127,40 @@ const AdvertisementsPage = ({ mainUser }) => {
         onPublish={handlePublish}
       />
 
+      {/* ALERTS */}
       <Snackbar
-        open={successSnackbarOpen}
+        open={successAlertOpen}
         autoHideDuration={4000}
-        onClose={handleSuccessSnackbarClose}
+        onClose={handleSuccessAlertClose}
         anchorOrigin={{
-          vertical: 'bottom',  // Position it at the top of the screen
-          horizontal: 'center',  // Center it horizontally
+          vertical: 'bottom',
+          horizontal: 'center',
         }}
       >
-        <Alert onClose={handleSuccessSnackbarClose} severity="success" sx={{ width: '100%' }}>
+        <Alert onClose={handleSuccessAlertClose} severity="success" sx={{ width: '100%' }}>
           Advertisement created successfully!
         </Alert>
       </Snackbar>
 
       <Snackbar
-        open={errorSnackbarOpen}
+        open={errorAlertOpen}
         autoHideDuration={4000}
-        onClose={handleErrorSnackbarClose}
+        onClose={handleErrorAlertClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={handleErrorSnackbarClose} severity="error" sx={{ width: '100%' }}>
+        <Alert onClose={handleErrorAlertClose} severity="warning" sx={{ width: '100%' }}>
           All fields are required!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={deleteAlertOpen}
+        autoHideDuration={4000}
+        onClose={handleDeleteAlertClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleDeleteAlertClose} severity="success" sx={{ width: '100%' }}>
+          Advertisement deleted successfully!
         </Alert>
       </Snackbar>
     </Box>

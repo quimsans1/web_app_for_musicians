@@ -8,11 +8,10 @@ const { readMainUser } = require('../mainUser/mainUser');
 const router = express.Router();
 const mainUser = readMainUser();
 
-// Contenido inicial (amb UUIDs generats dinàmicament per cada reinici)
 const initialAdvertisements = [
   { 
     id: uuidv4(),
-    userId: users[0].id,
+    userId: users[4].id,
     title: 'Clases de Guitarra para Principiantes',
     description: 'bla bla bla bla bla bla.',
     location: 'Barcelona, España',
@@ -22,8 +21,8 @@ const initialAdvertisements = [
   },
   { 
     id: uuidv4(),
-    userId: users[0].id,
-    title: 'Concierto de Jazz',
+    userId: users[1].id,
+    title: 'Jazz Concert',
     description: 'bla bla bla bla bla bla.',
     location: 'Madrid, España',
     type: 'Event',
@@ -32,45 +31,94 @@ const initialAdvertisements = [
   },
   { 
     id: uuidv4(),
-    userId: users[1].id,
-    title: 'Busco Vocalista para Banda de Rock',
+    userId: users[2].id,
+    title: 'Searching a Vocalist for our Rock Band',
     description: 'bla bla bla bla bla bla.',
     location: 'Valencia, España',
     type: 'Offer',
     image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
     link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
   },
-  // Agrega más advertisements aquí según sea necesario
+  { 
+    id: uuidv4(),
+    userId: users[1].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
+  { 
+    id: uuidv4(),
+    userId: users[2].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
+  { 
+    id: uuidv4(),
+    userId: users[3].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
+  { 
+    id: uuidv4(),
+    userId: users[4].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
+  { 
+    id: uuidv4(),
+    userId: users[5].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
+  { 
+    id: uuidv4(),
+    userId: users[6].id,
+    title: 'Title',
+    description: 'bla bla bla bla bla bla.',
+    location: 'Valencia, España',
+    type: 'Offer',
+    image: 'https://i.ytimg.com/vi/qFD2wDUGH2A/maxresdefault.jpg',
+    link: 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+  },
 ];
 
-// Ruta del archivo JSON
 const filePath = path.join(__dirname, 'advertisements.json');
 
-// Funció per inicialitzar el fitxer JSON amb les dades per defecte
 const initializeAdvertisements = () => {
-  console.log('Inicializando el archivo de advertisements...');
   
-  // Esborra el contingut actual del fitxer
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath); // Esborra l'arxiu
   }
 
-  // Genera les dades per defecte amb nous UUIDs
   const advertisements = initialAdvertisements.map(ad => ({
     ...ad,
-    id: uuidv4(), // Genera un nou UUID per cada publicitat
+    id: uuidv4(),
   }));
 
-  // Guarda el contingut per defecte al fitxer JSON
   fs.writeFileSync(filePath, JSON.stringify(advertisements, null, 2));
-
-  console.log('El archivo de advertisements ha sido inicializado con los datos por defecto.');
 };
 
-// Inicialitza el fitxer d'advertisements quan el servidor s'inicia
 initializeAdvertisements();
 
-// Funció per llegir dades del fitxer JSON
 const readAdvertisements = () => {
   try {
     const data = fs.readFileSync(filePath, 'utf8');
@@ -81,54 +129,48 @@ const readAdvertisements = () => {
   }
 };
 
-// Funció per escriure dades al fitxer JSON
 const writeAdvertisements = (data) => {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
   } catch (error) {
-    console.error('Error escribiendo el archivo:', error);
+    console.error('Error writing the file:', error);
   }
 };
 
-// Ruta per obtenir tots els advertisements
+// Get all advertisements
 router.get('/', (req, res) => {
   const advertisements = readAdvertisements();
   res.json(advertisements);
 });
 
-// Ruta per obtenir un advertisement per ID
+// Get by ID
 router.get('/:id', (req, res) => {
   const advertisements = readAdvertisements();
   const advertisement = advertisements.find(a => a.id === req.params.id);
   if (advertisement) {
     res.json(advertisement);
   } else {
-    res.status(404).json({ message: 'Advertisement no encontrado' });
+    res.status(404).json({ message: 'Advertisement not found' });
   }
 });
 
-// Ruta per crear un nou advertisement
 router.post('/', (req, res) => {
-  console.log('REQ.BODY', req.body);
 
-  const mainUser = readMainUser(); 
+  const mainUser = readMainUser();
 
   const { title, description, location, type, image, link } = req.body;
 
-  // Verifica si faltan campos obligatorios
   if (!title || !description || !location || !type || !image || !link) {
     return res.status(400).json({ message: 'Required fields are missing' });
   }
 
-  // Verifica si el mainUser es válido
   if (!mainUser || Object.keys(mainUser).length === 0) {
     return res.status(404).json({ message: 'Main user not found in Advertisements.js' });
   }
 
-  // Crea el nuevo anuncio
   const newAdvertisement = {
     id: uuidv4(),
-    userId: mainUser.id, // Cambia a `mainUser.id` porque es un objeto
+    userId: mainUser.id,
     title,
     description,
     location,
@@ -137,33 +179,16 @@ router.post('/', (req, res) => {
     link,
   };
 
-  // Save Advertisement
   const advertisements = readAdvertisements();
   advertisements.push(newAdvertisement);
   writeAdvertisements(advertisements);
 
-  // Devuelve el nuevo anuncio como respuesta
   res.status(201).json(newAdvertisement);
 });
 
-/*router.delete('/advertisements/:id', (req, res) => {
-  console.log('req.params.id', req.params.id)
-  const id = req.params.id;
-  console.log('id', id)
-  
-  const advertisements = readAdvertisements();
-  const index = advertisements.findIndex((ad) => ad.id === id);
-  if (index === -1) {
-    return res.status(404).json({ error: 'Advertisement not found' });
-  }
-  advertisements.splice(index, 1);
-  writeAdvertisements(advertisements);
-  res.status(200).json({ message: 'Advertisement deleted successfully' });
-});*/
-
 router.delete('/', (req, res) => {
-  const obj = req.body; // Se espera que el cuerpo de la solicitud contenga el userId
-  const id = Object.keys(obj)[0]; // Obtener la clave del objeto enviado
+  const obj = req.body;
+  const id = Object.keys(obj)[0];
 
   const advertisements = readAdvertisements();
 
@@ -174,15 +199,6 @@ router.delete('/', (req, res) => {
   advertisements.splice(index, 1);
   writeAdvertisements(advertisements);
   res.status(200).json({ message: 'Advertisement deleted successfully' });
-  // Comprobar si el userId existe en el array
-  /*const index = advertisements.indexOf(userId);
-  if (index !== -1) {
-      favorites.splice(index, 1);
-      writeFavorites(favorites);
-      res.status(200).json({ message: `User ID ${userId} removed from favorites.` });
-  } else {
-      res.status(404).json({ error: `User ID ${userId} not found in favorites.` });
-  }*/
 });
 
 

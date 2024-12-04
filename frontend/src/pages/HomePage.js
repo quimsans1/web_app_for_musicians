@@ -5,14 +5,16 @@ import { getUsers } from '../services/userService';
 import UserCard from '../components/UserCard';
 import { getFavorites } from '../services/favoritesService';
 
+
 const HomePage = () => {
   const { searchTerm, userTypeFilter, instrumentFilter, groupTypeFilter, serviceTypeFilter, languageFilter, countryFilter, musicStyleFilter } = useOutletContext();
   
   const [users, setUsers] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [alertOpen, setAlertOpen] = useState(false);  // Estado para mostrar el alert
+  const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('success');
+  const [gridColumns, setGridColumns] = useState(4);
 
   const fetchFavorites = async () => {
     const data = await getFavorites();
@@ -44,8 +46,7 @@ const HomePage = () => {
     };
     fetchUsers();
   }, [searchTerm, userTypeFilter, instrumentFilter, groupTypeFilter, serviceTypeFilter, languageFilter, countryFilter, musicStyleFilter]);
-  
-  // Función para mostrar el alert cuando un usuario es seleccionado
+
   const handleFavoritedAlert = (message) => {
     fetchFavorites();
     setAlertMessage(message);
@@ -53,7 +54,6 @@ const HomePage = () => {
     setAlertOpen(true);
   };
 
-  // Función para mostrar el alert cuando un usuario es deseleccionado
   const handleUnFavoritedAlert = (message) => {
     fetchFavorites();
     setAlertMessage(message);
@@ -61,6 +61,30 @@ const HomePage = () => {
     setAlertOpen(true);
   };
 
+  // Adapt User Card Grid Columns depending on the Browser Width
+  useEffect(() => {
+    const updateGridColumns = () => {
+      const width = window.innerWidth;
+      if (width >= 1920) {
+        setGridColumns(3);
+      } else if (width >= 1530) {
+        setGridColumns(4);
+      } else if (width >= 1120) {
+        setGridColumns(6);
+      } else {
+        setGridColumns(12);
+      }
+    };
+  
+    updateGridColumns();
+    window.addEventListener('resize', updateGridColumns);
+  
+    return () => {
+      window.removeEventListener('resize', updateGridColumns);
+    };
+  }, []);
+
+  // --- LOADING USERS ---
   if (users.length === 0) {
     return (
       <Box
@@ -70,13 +94,13 @@ const HomePage = () => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100vh',
-          backgroundColor: '#f5f5f5', // Fondo suave
+          backgroundColor: '#f5f5f5',
         }}
       >
         <CircularProgress
           size={60}
           thickness={5}
-          sx={{ color: '#1e88e5', marginBottom: 2 }} // Personaliza el color y tamaño
+          sx={{ color: '#1e88e5', marginBottom: 2 }}
         />
         <Typography variant="h6" color="textSecondary">
           Loading Users...
@@ -89,8 +113,13 @@ const HomePage = () => {
     <Box sx={{ padding: 2, minWidth: '300px' }}>
       <Grid container spacing={3}>
         {users.map(user => (
-          <Grid item xs={12} sm={6} md={4} lg={12 / 4} key={user.id}>
-            <UserCard 
+          <Grid 
+            item
+            xs={gridColumns}
+            lg={gridColumns}
+            key={user.id}
+          >        
+            <UserCard
               user={user} 
               onFavorited={handleFavoritedAlert}
               onUnFavorited={handleUnFavoritedAlert}
@@ -100,7 +129,7 @@ const HomePage = () => {
         ))}
       </Grid>
 
-      {/* Snackbar para mostrar el alert */}
+      {/* ALERT */}
       <Snackbar
         open={alertOpen}
         autoHideDuration={6000}

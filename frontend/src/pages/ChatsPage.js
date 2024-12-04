@@ -1,4 +1,3 @@
-// ChatsPage.js
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { List, ListItem, Avatar, Box, Typography } from '@mui/material';
@@ -11,7 +10,7 @@ const ChatsPage = () => {
   const [chats, setChats] = useState([]);
   const [tempUser, setTempUser] = useState(null);
 
-  // Función para validar y limpiar `localStorage`
+  // Validate and clean localStorage
   const validateAndClearStorage = async () => {
     const validUserIds = (await getUsers()).map(user => user.id);
     const storageKeys = Object.keys(localStorage);
@@ -30,7 +29,7 @@ const ChatsPage = () => {
   useEffect(() => {
     validateAndClearStorage();
 
-    // Carga los usuarios con mensajes de `localStorage`
+    // Load users with messages in LocalStorage
     const loadUsersWithMessages = async () => {
       const storageKeys = Object.keys(localStorage);
       const userIdsWithMessages = storageKeys
@@ -57,12 +56,12 @@ const ChatsPage = () => {
     }
   }, [location.state?.selectedChatId, chats]);
 
-  // Solo añade `tempUser` si no está en `chats` y limpia `tempUser` después
+  // Only add tempUser if it's not in chats, and then clean tempUser
   useEffect(() => {
     if (tempUser && !chats.some(chat => chat.id === tempUser.id)) {
       setChats(prevChats => [...prevChats, tempUser]);
     }
-    setTempUser(null); // Limpia `tempUser` después de usarlo
+    setTempUser(null);
   }, [tempUser, chats]);
 
   const handleChatSelect = (chatId) => {
@@ -72,6 +71,8 @@ const ChatsPage = () => {
   return (
     <Box display="flex" height="calc(100vh - 112px)" overflow="hidden">
       <Box flex="1" maxWidth="300px" borderRight="1px solid #ddd">
+
+        {/* USERS (On the left)*/}
         <Box
           sx={{
             height: '100%',
@@ -97,7 +98,7 @@ const ChatsPage = () => {
                 onClick={() => handleChatSelect(chat.id)}
                 selected={selectedChatId === chat.id}
                 sx={{
-                  backgroundColor: selectedChatId === chat.id ? '#1976D2' : 'transparent',
+                  backgroundColor: selectedChatId === chat.id ? '#1e88e5' : 'transparent',
                   color: selectedChatId === chat.id ? 'white' : 'inherit',
                   '&:hover': {
                     backgroundColor: selectedChatId === chat.id ? '#1976D2' : '#e0e0e0',
@@ -114,12 +115,19 @@ const ChatsPage = () => {
           </List>
         </Box>
       </Box>
+
+      {/* CHAT ROOM (On the right)*/}
       <Box flex="3" display="flex" flexDirection="column" height="100%">
         <Box flex="1" p={2} display="flex" flexDirection="column" overflow="hidden">
           {selectedChatId ? (
             <ChatRoom roomId={selectedChatId} />
           ) : (
-            <Typography>No has seleccionado ningún chat.</Typography>
+            <Box textAlign="center" sx={{ marginTop: '30vh' }}>
+              <img src="/LogoMusyncGray.svg" alt="Logo" style={{ width: '150px', height: 'auto', marginBottom: '20px' }} />
+              <Typography variant="h6" color="textSecondary">
+                No chat is selected. Please choose a conversation.
+              </Typography>
+            </Box>
           )}
         </Box>
       </Box>

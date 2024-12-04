@@ -7,34 +7,311 @@ import {
   IconButton,
   Autocomplete,
   Avatar,
-  Chip,
   Select,
   InputLabel,
   MenuItem,
   FormControl,
   Alert,
-  Snackbar
+  Snackbar,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import imageCompression from 'browser-image-compression'; // Import the library
+import imageCompression from 'browser-image-compression';
 
 const locationsList = [
   'New York, USA',
   'Los Angeles, USA',
+  'Chicago, USA',
+  'San Francisco, USA',
+  'Miami, USA',
   'London, UK',
+  'Manchester, UK',
+  'Edinburgh, UK',
   'Paris, France',
+  'Lyon, France',
+  'Marseille, France',
   'Tokyo, Japan',
+  'Osaka, Japan',
+  'Kyoto, Japan',
   'Barcelona, Spain',
+  'Madrid, Spain',
+  'Valencia, Spain',
   'Berlin, Germany',
+  'Munich, Germany',
+  'Hamburg, Germany',
   'Sydney, Australia',
+  'Melbourne, Australia',
+  'Brisbane, Australia',
+  'Toronto, Canada',
+  'Vancouver, Canada',
+  'Montreal, Canada',
+  'Beijing, China',
+  'Shanghai, China',
+  'Guangzhou, China',
+  'Rio de Janeiro, Brazil',
+  'São Paulo, Brazil',
+  'Brasília, Brazil',
+  'Cape Town, South Africa',
+  'Johannesburg, South Africa',
+  'Durban, South Africa',
+  'Moscow, Russia',
+  'Saint Petersburg, Russia',
+  'Kazan, Russia',
+  'Mumbai, India',
+  'Delhi, India',
+  'Bangalore, India',
+  'Seoul, South Korea',
+  'Busan, South Korea',
+  'Daegu, South Korea',
+  'Dubai, UAE',
+  'Abu Dhabi, UAE',
+  'Sharjah, UAE',
+  'Rome, Italy',
+  'Milan, Italy',
+  'Florence, Italy',
+  'Mexico City, Mexico',
+  'Guadalajara, Mexico',
+  'Monterrey, Mexico',
+  'Bangkok, Thailand',
+  'Phuket, Thailand',
+  'Chiang Mai, Thailand',
+  'Istanbul, Turkey',
+  'Ankara, Turkey',
+  'Izmir, Turkey',
+  'Buenos Aires, Argentina',
+  'Córdoba, Argentina',
+  'Rosario, Argentina',
+  'Singapore, Singapore',
+  'Kuala Lumpur, Malaysia',
+  'Penang, Malaysia',
+  'Jakarta, Indonesia',
+  'Bali, Indonesia',
+  'Surabaya, Indonesia',
+  'Cairo, Egypt',
+  'Alexandria, Egypt',
+  'Giza, Egypt',
+  'Athens, Greece',
+  'Thessaloniki, Greece',
+  'Santorini, Greece',
+  'Hanoi, Vietnam',
+  'Ho Chi Minh City, Vietnam',
+  'Da Nang, Vietnam',
+  'Lisbon, Portugal',
+  'Porto, Portugal',
+  'Faro, Portugal',
+  'Stockholm, Sweden',
+  'Gothenburg, Sweden',
+  'Malmö, Sweden',
+  'Oslo, Norway',
+  'Bergen, Norway',
+  'Stavanger, Norway',
+  'Copenhagen, Denmark',
+  'Aarhus, Denmark',
+  'Odense, Denmark',
+  'Dublin, Ireland',
+  'Cork, Ireland',
+  'Galway, Ireland',
+  'Vienna, Austria',
+  'Salzburg, Austria',
+  'Innsbruck, Austria',
+  'Amsterdam, Netherlands',
+  'Rotterdam, Netherlands',
+  'The Hague, Netherlands',
+  'Brussels, Belgium',
+  'Antwerp, Belgium',
+  'Ghent, Belgium',
+  'Warsaw, Poland',
+  'Krakow, Poland',
+  'Gdańsk, Poland',
+  'Helsinki, Finland',
+  'Espoo, Finland',
+  'Tampere, Finland',
+  'Zurich, Switzerland',
+  'Geneva, Switzerland',
+  'Bern, Switzerland',
+  'Prague, Czech Republic',
+  'Brno, Czech Republic',
+  'Ostrava, Czech Republic'
 ];
 
-const allMusicStyles = ['Blues', 'Funk', 'Jazz', 'Rock', 'Pop', 'Classical', 'Hip-Hop'];
-const allLanguages = ['Spanish', 'English', 'French', 'German'];
-const allInstruments = ['Piano', 'Guitar', 'Violin'];
-const allGroups = ['Band', 'Orchestra', 'Choir', 'Quartet'];
-const allServices = ['Production', 'Music Production', 'Sound Engineering'];
+const allMusicStyles = [
+  "Rock",
+  "Jazz",
+  "Classical",
+  "Pop",
+  "Hip Hop",
+  "Blues",
+  "Reggae",
+  "Country",
+  "Electronic",
+  "Folk",
+  "R&B",
+  "Soul",
+  "Punk",
+  "Metal",
+  "Indie",
+  "Alternative",
+  "Funk",
+  "Disco",
+  "Techno",
+  "House",
+  "Trance",
+  "Dubstep",
+  "Ambient",
+  "Chillout",
+  "Experimental",
+  "World Music",
+  "Latin",
+  "Afrobeat",
+  "Ska",
+  "Swing",
+  "Bluegrass",
+  "Gospel",
+  "Trap",
+  "Dancehall",
+  "Reggaeton",
+  "Salsa",
+  "Bossa Nova",
+  "Flamenco",
+  "Tango",
+  "K-Pop",
+  "J-Pop",
+  "Celtic",
+  "Opera",
+  "Baroque",
+  "Folk Rock",
+  "Prog Rock",
+  "Post-Rock",
+  "Industrial",
+  "New Age",
+  "Classical Crossover",
+  "Hard Rock",
+  "Garage Rock",
+  "Country Rock",
+  "Grunge"
+].sort();
+const allLanguages = [
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Dutch",
+  "Chinese",
+  "Japanese",
+  "Russian",
+  "Arabic",
+  "Korean",
+  "Hindi",
+  "Bengali",
+  "Turkish",
+  "Vietnamese",
+  "Polish",
+  "Swedish",
+  "Greek",
+  "Czech",
+  "Finnish",
+  "Danish",
+  "Norwegian",
+  "Hungarian",
+  "Hebrew",
+  "Thai",
+  "Swahili",
+  "Ukrainian",
+  "Romanian",
+  "Malay",
+  "Indonesian",
+  "Tamil",
+  "Telugu",
+  "Punjabi",
+  "Marathi"
+];
+const allInstruments = [
+  "Accordion",
+  "Acoustic guitar",
+  "Alto saxophone",
+  "Anklung",
+  "Bagpipes",
+  "Banjo",
+  "Bass",
+  "Bassoon",
+  "Cello",
+  "Clarinet",
+  "Congas",
+  "Double bass",
+  "Drums",
+  "Electric guitar",
+  "Flute",
+  "French horn",
+  "Glockenspiel",
+  "Guitar",
+  "Harmonica",
+  "Harpsichord",
+  "Horn",
+  "Kettledrum",
+  "Mandolin",
+  "Marimba",
+  "Oboe",
+  "Organ",
+  "Pan flute",
+  "Piano",
+  "Recorder",
+  "Saxophone",
+  "Singer",
+  "Timpani",
+  "Trombone",
+  "Trumpet",
+  "Tuba",
+  "Ukulele",
+  "Viola",
+  "Violin",
+  "Xylophone",
+  "Zither"
+].sort();
+const allGroups = [
+  "Band",
+  "Orchestra",
+  "Choir",
+  "Quartet",
+  "Trio",
+  "Duo",
+  "Ensemble",
+  "Big Band",
+  "Jazz Band",
+  "Brass Band",
+  "Chamber Orchestra",
+  "Symphony Orchestra",
+  "Marching Band",
+  "Rock Band",
+  "Cover Band",
+  "String Quartet",
+  "Wind Quintet"];
+const allServices = [
+  "Record Label",
+  "Artist Management",
+  "Production",
+  "Music Production",
+  "Sound Engineering",
+  "Live Sound",
+  "Music Composition",
+  "Recording",
+  "Mixing",
+  "Mastering",
+  "Songwriting",
+  "Music Licensing",
+  "Music Distribution",
+  "Concert Promotion",
+  "Event Management",
+  "Music Video Production",
+  "Stage Design",
+  "Lighting Design",
+  "Audio Post-Production",
+  "Broadcasting",
+  "Film Scoring"
+];
 
 const EditProfileForm = ({ mainUser, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -48,13 +325,13 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
 
   // Alerts of Links
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState('success'); // Puede ser 'error', 'warning', 'info', 'success'
+  const [alertSeverity, setAlertSeverity] = useState('success');
   const [alertOpen, setAlertOpen] = useState(false);
 
-  // --- HANDLE CHANGE (For String Values): REAL NAME, LOCATION ---
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  
 
   // --- UPLOAD IMAGE (PROFILE OR BACKGROUND) --- 
   const handleImageUpload = async (event, imageType) => {
@@ -66,9 +343,9 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
     try {
       // Compression options
       const options = {
-        maxSizeMB: 1, // Maximum size in MB
-        maxWidthOrHeight: 1024, // Max width or height in pixels
-        useWebWorker: true, // Use web worker for better performance
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
       };
 
       // Compress the image
@@ -78,12 +355,12 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
       if (imageType === 'profilePicture') {
         setFormData((prev) => ({
           ...prev,
-          profilePicture: URL.createObjectURL(compressedFile), // For preview
+          profilePicture: URL.createObjectURL(compressedFile),
         }));
       } else if (imageType === 'backgroundImage') {
         setFormData((prev) => ({
           ...prev,
-          backgroundImage: URL.createObjectURL(compressedFile), // For preview
+          backgroundImage: URL.createObjectURL(compressedFile),
         }));
       }
     } catch (error) {
@@ -96,27 +373,27 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
 
   // --- LINK --- 
   const handleAddLink = () => {
-    const newLink = currentLink.trim(); // Elimina espacios en blanco
+    const newLink = currentLink.trim();
     if (!newLink) {
       setAlertMessage('Link cannot be empty');
       setAlertSeverity('error');
-      setAlertOpen(true); // Muestra la alerta
+      setAlertOpen(true);
       return;
     }
     if (formData.links.some((link) => link.url === newLink)) {
       setAlertMessage('This link already exists');
       setAlertSeverity('warning');
-      setAlertOpen(true); // Muestra la alerta
+      setAlertOpen(true);
       return;
     }
     setFormData((prev) => ({
       ...prev,
       links: [...prev.links, { url: newLink }],
     }));
-    setCurrentLink(''); // Limpia el campo de entrada después de agregar
+    setCurrentLink('');
     setAlertMessage('Link added successfully');
     setAlertSeverity('success');
-    setAlertOpen(true); // Muestra la alerta
+    setAlertOpen(true);
   };  
 
   const handleDeleteLink = (index) => {
@@ -126,79 +403,35 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
     }));
   };
 
-  // --- GENERALIZED HANDLERS FOR MUSIC STYLES, LANGUAGES, AND NESTED FIELDS ---
-  const handleAddItem = (item, type) => {
-    const fieldParts = type.split('.');  // Divide el tipo para obtener los campos anidados
-  
-    if (fieldParts.length === 1) {
-      // Caso sin anidación (como 'musicStyles' o 'languages')
-      if (!formData[type].includes(item)) {
-        setFormData((prev) => ({
-          ...prev,
-          [type]: [...prev[type], item],
-        }));
-      }
-    } else if (fieldParts.length === 2) {
-      // Caso con una propiedad anidada (como 'musicianInfo.instruments')
+  // --- HANDLERS FOR MUSIC STYLES, LANGUAGES, AND NESTED FIELDS ---
+  const handleAddArray = (value, type) => {
+    const fieldParts = type.split('.');
+    if (fieldParts.length === 2) {
+      // In case it has nested fields (Example: 'musicianInfo.instruments')
       const [parentField, childField] = fieldParts;
   
       if (parentField === 'groupInfo' && childField === 'groupType') {
-        // Reemplazar el grupo si ya existe uno
+        const array = [value]
         setFormData((prev) => ({
           ...prev,
           [parentField]: {
             ...prev[parentField],
-            [childField]: [item],  // Reemplaza el grupo existente
+            [childField]: array,
           },
         }));
       } else {
-        // Si no es 'groupInfo', agregar el item normalmente
-        if (!formData[parentField][childField].includes(item)) {
+        // If it's not 'groupInfo', add array normally
+        const array = value
           setFormData((prev) => ({
             ...prev,
             [parentField]: {
               ...prev[parentField],
-              [childField]: [...prev[parentField][childField], item],
+              [childField]: array,
             },
           }));
-        }
       }
     }
   };
-
-  const handleDeleteItem = (item, type) => {
-    const fieldParts = type.split('.');  // Divide el tipo para obtener los campos anidados
-  
-    if (fieldParts.length === 1) {
-      // Caso sin anidación (como 'musicStyles' o 'languages')
-      setFormData((prev) => ({
-        ...prev,
-        [type]: prev[type].filter((i) => i !== item),
-      }));
-    } else if (fieldParts.length === 2) {
-      // Caso con una propiedad anidada (como 'musicianInfo.instruments')
-      const [parentField, childField] = fieldParts;
-  
-      if (parentField === 'groupInfo' && childField === 'groupType') {
-        // Eliminar el grupo al vaciar el array
-        setFormData((prev) => ({
-          ...prev,
-          [parentField]: {
-            ...prev[parentField],
-            [childField]: [],  // Vaciar el grupo seleccionado
-          },
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [parentField]: {
-            ...prev[parentField],
-            [childField]: prev[parentField][childField].filter((i) => i !== item),
-          },
-        }));
-      }
-    }
-  };  
 
   // --- SAVE --- 
   const handleSave = () => {
@@ -209,15 +442,22 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
   return (
     <Box>
       {/* REAL NAME */}
+      <Typography variant="h6" sx={{ marginBottom: 1 }}>
+        Real Name
+      </Typography>
       <TextField
         label="Real Name"
         value={formData.name}
         onChange={(e) => handleChange('name', e.target.value)}
         fullWidth
-        sx={{ marginBottom: 2 }}
+        sx={{ marginBottom: 1 }}
+        size="small"
       />
 
       {/* LOCATION */}
+      <Typography variant="h6" sx={{ marginBottom: 1 }}>
+        Location
+      </Typography>
       <Autocomplete
         options={locationsList}
         value={formData.location}
@@ -227,22 +467,30 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
             {...params}
             label="Location"
             fullWidth
-            sx={{ marginBottom: 2 }}
+            sx={{ marginBottom: 1 }}
+            size="small"
           />
         )}
       />
 
       {/* DESCRIPTION */}
+      <Typography variant="h6" sx={{ marginBottom: 1 }}>
+        Description
+      </Typography>
       <TextField
         label="Description"
         value={formData.description}
         onChange={(e) => handleChange('description', e.target.value)}
         fullWidth
         sx={{ marginBottom: 2 }}
+        size="small"
       />
 
       {/* USER TYPE */}
-      <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <Typography variant="h6" sx={{ marginTop: 2, marginBottom: 1 }}>
+        User Type
+      </Typography>
+      <FormControl fullWidth>
         <InputLabel id="mainUser-type-label">User Type</InputLabel>
         <Select
           labelId="mainUser-type-label"
@@ -250,6 +498,7 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
           value={formData.userType}
           onChange={(e) => handleChange('userType', e.target.value)} // Use handleChange for userType
           label="User Type"
+          size="small"
         >
           <MenuItem value="Musician">Musician</MenuItem>
           <MenuItem value="Group">Group</MenuItem>
@@ -257,161 +506,141 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
         </Select>
       </FormControl>
 
-      {/* Show instruments if mainUser type is Musician */}
+      {/* Show INSTRUMENTS if mainUser type is Musician */}
       {formData.userType === 'Musician' && (
         <>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 1 }}>
             Instruments
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1} sx={{ marginBottom: 2, marginTop: 1 }}>
-            {formData.musicianInfo.instruments.length > 0 &&
-              formData.musicianInfo.instruments.map((instrument, index) => (
-                <Chip
-                  key={index}
-                  label={instrument}
-                  onDelete={() => handleDeleteItem(instrument, 'musicianInfo.instruments')}
-                  color="primary"
-                />
-              ))}
-          </Box>
-          <Box display="flex" gap={1} sx={{ marginBottom: 3 }}>
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+          <InputLabel id="instruments-select-label">Instruments</InputLabel>
+          <Select
+            labelId="instruments-select-label"
+            id="instruments-select"
+            multiple
+            value={formData.musicianInfo.instruments}
+            onChange={(event) => handleAddArray(event.target.value, 'musicianInfo.instruments')}
+            renderValue={(selected) => selected.join(', ')}
+            size="small"
+          >
             {allInstruments.map((instrument) => (
-              <Button
-                key={instrument}
-                variant="outlined"
-                onClick={() => handleAddItem(instrument, 'musicianInfo.instruments')}
-                disabled={formData.musicianInfo.instruments.includes(instrument)}
-              >
-                {instrument}
-              </Button>
+              <MenuItem key={instrument} value={instrument}>
+                <Checkbox checked={formData.musicianInfo.instruments.includes(instrument)} />
+                <ListItemText primary={instrument} />
+              </MenuItem>
             ))}
-          </Box>
+          </Select>
+        </FormControl>
         </>
       )}
 
-      {/* Show groups if mainUser type is Group */}
+      {/* Show GROUPS if mainUser type is Group */}
       {formData.userType === 'Group' && (
         <>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 1 }}>
             Group
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1} sx={{ marginBottom: 2, marginTop: 1 }}>
-            {formData.groupInfo.groupType.length > 0 &&
-              formData.groupInfo.groupType.map((group, index) => (
-                <Chip
-                  key={index}
-                  label={group}
-                  onDelete={() => handleDeleteItem(group, 'groupInfo.groupType')}
-                  color="primary"
-                />
-              ))}
-          </Box>
-          <Box display="flex" gap={1} sx={{ marginBottom: 3}}>
-            {allGroups.map((group) => (
-              <Button
-                key={group}
-                variant="outlined"
-                onClick={() => handleAddItem(group, 'groupInfo.groupType')}
-                disabled={formData.groupInfo.groupType.includes(group)}
+          <Box>
+            <FormControl fullWidth sx={{ marginBottom: 2 }}>
+              <InputLabel id="group-label">Group</InputLabel>
+              <Select
+                labelId="group-label"
+                value={formData.groupInfo.groupType}
+                onChange={(event) => handleAddArray(event.target.value, 'groupInfo.groupType')}
+                size="small"
               >
-                {group}
-              </Button>
-            ))}
+                {allGroups.map((group) => (
+                  <MenuItem key={group} value={group}>
+                    {group}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </>
       )}
 
-      {/* Show services if mainUser type is Service */}
+      {/* Show SERVICES if mainUser type is Service */}
       {formData.userType === 'Service' && (
         <>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 1 }}>
             Services
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1} sx={{ marginBottom: 2, marginTop: 1 }}>
-            {formData.serviceInfo.serviceType.length > 0 &&
-              formData.serviceInfo.serviceType.map((service, index) => (
-                <Chip
-                  key={index}
-                  label={service}
-                  onDelete={() => handleDeleteItem(service, 'serviceInfo.serviceType')}
-                  color="primary"
-                />
-              ))}
-          </Box>
-          <Box display="flex" gap={1} sx={{ marginBottom: 3 }}>
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+          <InputLabel id="services-select-label">Services</InputLabel>
+          <Select
+            labelId="services-select-label"
+            id="services-select"
+            multiple
+            value={formData.serviceInfo.serviceType}
+            onChange={(event) => handleAddArray(event.target.value, 'serviceInfo.serviceType', )}
+            renderValue={(selected) => selected.join(', ')}
+            size="small"
+          >
             {allServices.map((service) => (
-              <Button
-                key={service}
-                variant="outlined"
-                onClick={() => handleAddItem(service, 'serviceInfo.serviceType')}
-                disabled={formData.serviceInfo.serviceType.includes(service)}
-              >
-                {service}
-              </Button>
+              <MenuItem key={service} value={service}>
+                <Checkbox checked={formData.serviceInfo.serviceType.includes(service)} />
+                <ListItemText primary={service} />
+              </MenuItem>
             ))}
-          </Box>
+          </Select>
+        </FormControl>
         </>
       )}
 
       {/* MUSIC STYLES */}
-      <Typography variant="h6" sx={{ marginTop: 3 }}>
+      <Typography variant="h6" sx={{ marginTop: 2, marginBottom: 1 }}>
         Music Styles
       </Typography>
-      <Box display="flex" flexWrap="wrap" gap={1} sx={{ marginBottom: 2 }}>
-        {formData.musicStyles.map((style, index) => (
-          <Chip
-            key={index}
-            label={style}
-            onDelete={() => handleDeleteItem(style, 'musicStyles')}
-            color="primary"
-          />
-        ))}
-      </Box>
-      <Box display="flex" gap={1}>
-        {allMusicStyles.map((style) => (
-          <Button
-            key={style}
-            variant="outlined"
-            onClick={() => handleAddItem(style, 'musicStyles')}
-            disabled={formData.musicStyles.includes(style)}
-          >
-            {style}
-          </Button>
-        ))}
-      </Box>
+      <FormControl fullWidth sx={{ marginBottom: 0 }}>
+        <InputLabel id="music-styles-select-label">Music Styles</InputLabel>
+        <Select
+          labelId="music-styles-select-label"
+          id="music-styles-select"
+          multiple
+          value={formData.musicStyles}
+          onChange={(event) => handleChange('musicStyles', event.target.value)}
+          renderValue={(selected) => selected.join(', ')}
+          size="small"
+        >
+          {allMusicStyles.map((style) => (
+            <MenuItem key={style} value={style}>
+              <Checkbox checked={formData.musicStyles.includes(style)} />
+              <ListItemText primary={style} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       {/* LANGUAGES */}
-      <Typography variant="h6" sx={{ marginTop: 3 }}>
+      <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 1 }}>
         Languages
       </Typography>
-      <Box display="flex" flexWrap="wrap" gap={1} sx={{ marginBottom: 2 }}>
-        {formData.languages.map((language, index) => (
-          <Chip
-            key={index}
-            label={language}
-            onDelete={() => handleDeleteItem(language, 'languages')}
-            color="primary"
-          />
-        ))}
-      </Box>
-      <Box display="flex" gap={1}>
+      <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <InputLabel id="languages-select-label">Languages</InputLabel>
+      <Select
+        labelId="languages-select-label"
+        id="languages-select"
+        multiple
+        value={formData.languages}
+        onChange={(event) => handleChange('languages', event.target.value)}
+        renderValue={(selected) => selected.join(', ')}
+        size="small"
+      >
         {allLanguages.map((language) => (
-          <Button
-            key={language}
-            variant="outlined"
-            onClick={() => handleAddItem(language, 'languages')}
-            disabled={formData.languages.includes(language)}
-          >
-            {language}
-          </Button>
+          <MenuItem key={language} value={language}>
+            <Checkbox checked={formData.languages.includes(language)} />
+            <ListItemText primary={language} />
+          </MenuItem>
         ))}
-      </Box>
+      </Select>
+    </FormControl>
 
       {/* SOCIAL LINKS */}
-      <Typography variant="h6">Social Links</Typography>
+      <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 1 }}>Social Links</Typography>
       {formData.links.map((link, index) => (
         <Box key={index} display="flex" alignItems="center" sx={{ marginBottom: 1 }}>
-          <TextField value={link.url} fullWidth sx={{ marginRight: 1 }} disabled />
+          <TextField value={link.url} fullWidth sx={{ marginRight: 1 }} disabled size="small"/>
           <IconButton onClick={() => handleDeleteLink(index)}>
             <DeleteIcon />
           </IconButton>
@@ -421,10 +650,11 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
       <Box display="flex" alignItems="center">
         <TextField
           label="Enter URL for New Link"
-          value={currentLink} // Manejamos el valor temporalmente
-          onChange={(e) => setCurrentLink(e.target.value)} // Actualizamos el estado temporal
+          value={currentLink}
+          onChange={(e) => setCurrentLink(e.target.value)}
           fullWidth
           placeholder="https://example.com"
+          size="small"
         />
         <IconButton onClick={handleAddLink} disabled={!currentLink.trim()}>
           <AddIcon />
@@ -432,7 +662,7 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
       </Box>
 
       {/* PROFILE PICTURE */}
-      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+      <Typography variant="h6" sx={{ marginTop: 3, marginBottom: 2 }}>
         Profile Picture
       </Typography>
       <Box display="flex" flexDirection="column" alignItems="center" sx={{ marginBottom: 2 }}>
@@ -498,9 +728,9 @@ const EditProfileForm = ({ mainUser, onClose, onSave }) => {
 
       <Snackbar
         open={alertOpen}
-        autoHideDuration={4000} // Oculta automáticamente después de 4 segundos
-        onClose={() => setAlertOpen(false)} // Cierra la alerta
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Posición de la alerta
+        autoHideDuration={4000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert onClose={() => setAlertOpen(false)} severity={alertSeverity} sx={{ width: '100%' }}>
           {alertMessage}

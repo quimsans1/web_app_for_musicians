@@ -31,6 +31,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import { getUserById } from '../services/userService';
 import { getUsers } from '../services/userService';
 import { getAdvertisements } from '../services/advertisementsService';
@@ -50,6 +51,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userAdvertisements, setUserAdvertisements] = useState([]);
+  const [userPhotos, setUserPhotos] = useState([]);
   const [userType, setUserType] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [favoritesModalOpen, setFavoritesModalOpen] = useState(false);
@@ -58,9 +60,9 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
 
   const navigate = useNavigate();
 
-  const [alertOpen, setAlertOpen] = useState(false);        // For controlling the Snackbar visibility
-  const [alertMessage, setAlertMessage] = useState("");      // For setting the message
-  const [alertSeverity, setAlertSeverity] = useState("success"); // For controlling the severity (success or error)
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
 
   const fetchFavorites = async () => {
     const data = await getFavorites();
@@ -144,20 +146,27 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
     }
   }, [favorites, userId]);
 
+  // --- GET ADVERTISEMENTS OF USER ---
   const fetchAdvertisements = useCallback(async () => {
     const allAdvertisements = await getAdvertisements();
     const userAdvertisements = allAdvertisements.filter(adv => adv.userId === userId);
     setUserAdvertisements(userAdvertisements);
   }, [userId]);
 
-  // --- GET ADVERTISEMENTS OF USER ---
   useEffect(() => {
-    if (user && Object.keys(user).length > 0) {      
+    if (user && Object.keys(user).length > 0) {
       fetchAdvertisements();
     }
   }, [user, fetchAdvertisements]);
-  
-  // -- HANDLE GALLERY DIALOG---
+
+  // --- GET GALLERY IMAGES ---
+  useEffect(() => {
+    if (user?.photos?.length > 0) {
+      setUserPhotos(user.photos)
+    }
+  }, [user]);
+
+  // -- HANDLE GALLERY MODAL ---
   const handleDialogOpen = (index) => {
     setCurrentImageIndex(index);
     setModalOpen(true);
@@ -176,8 +185,8 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
 
   // -- HANDLE CHAT BUTTON ---
   const handleChatClick = (e) => {
-    e.stopPropagation(); // Evita que se dispare el evento de clic en la tarjeta
-    navigate('/chats', { state: { selectedChatId: user.id } }); // Navega a la página de chats con el ID del usuario
+    e.stopPropagation();
+    navigate('/chats', { state: { selectedChatId: user.id } }); // Navigate to chat page by ID
   };
 
   // -- EDIT BUTTON ---
@@ -190,21 +199,21 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
         // eslint-disable-next-line no-unused-vars
         const response = await updateMainUser(updatedUser);
         if (JSON.stringify(response.user) === JSON.stringify(updatedUser)) {
-          setUser(updatedUser); // Actualiza el estado del usuario
+          setUser(updatedUser);
           getMainUserAgain(true);
-          setEditModalOpen(false); // Cierra el modal de edición
+          setEditModalOpen(false);
         
           // Set the success alert message
           setAlertMessage("Profile updated successfully!");
           setAlertSeverity("success");
-          setAlertOpen(true); // Show the alert
+          setAlertOpen(true);
         } else {
           console.error('Update of profile failed', response);
         }
       } else {
         setAlertMessage("No changes were made.");
         setAlertSeverity("error");
-        setAlertOpen(true); // Show the alert
+        setAlertOpen(true);
       }
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
@@ -212,11 +221,11 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
       // Set the error alert message
       setAlertMessage("Failed to update profile!");
       setAlertSeverity("error");
-      setAlertOpen(true); // Show the alert
+      setAlertOpen(true);
     }
   };
 
-  // --- ALERTS FAVORITED ---
+  // --- ALERTS: FAVORITED ---
   const handleFavoritedAlert = (message) => {
     fetchFavorites();
     setAlertMessage(message);
@@ -231,8 +240,19 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
     setAlertOpen(true);
   };
 
+  // ALERT: DELETED ADVERTISEMENT
+  const handleDeleteAlert = () => {
+    setAlertMessage('Advertisement successfully deleted');
+    setAlertSeverity('success');
+    setAlertOpen(true);
+  };
+
   // --- LOADING USER ---
-  if (!user || (Object.keys(user).length === 0)) {
+  if (
+    !user ||
+    (Object.keys(user).length === 0)
+    )
+  {
     return (
       <Box
         sx={{
@@ -241,13 +261,13 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100vh',
-          backgroundColor: '#f5f5f5', // Fondo suave
+          backgroundColor: '#f5f5f5',
         }}
       >
         <CircularProgress
           size={60}
           thickness={5}
-          sx={{ color: '#1e88e5', marginBottom: 2 }} // Personaliza el color y tamaño
+          sx={{ color: '#1e88e5', marginBottom: 2 }}
         />
         <Typography variant="h6" color="textSecondary">
           Loading user...
@@ -258,7 +278,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
 
   return (
     Object.keys(user).length > 0 && (
-      <Box sx={{ backgroundColor: 'white', padding: 4 }}>
+      <Box sx={{ backgroundColor: 'white', padding: 1 }}>
         <Grid container spacing={2} justifyContent="center">
           {/* USER PRESENTATION */}
           <Grid item xs={12} md={12}>
@@ -279,8 +299,8 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                 src={user.profilePicture}
                 alt={user.nickname}
                 sx={{
-                  width: { xs: 90, md: 120 },
-                  height: { xs: 90, md: 120 },
+                  width: 150,
+                  height: 150,
                   border: '3px solid white',
                   position: 'absolute',
                   top: '160px',
@@ -290,7 +310,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                 }}
               />            
               {/* NICKNAME & USER TYPE */}
-              <Box sx={{ display: 'inline-block', textAlign: 'center', position: 'relative', top: '80px'}}>
+              <Box sx={{ display: 'inline-block', textAlign: 'center', position: 'relative', top: '115px'}}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -308,9 +328,9 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                   sx={{
                     position: 'absolute',
                     top: '50%',
-                    left: '100%', // Placing the chip directly after the nickname
-                    transform: 'translateY(-50%)', // Align vertically with the nickname
-                    marginLeft: 1, // Add some space between the nickname and the chip
+                    left: '100%',
+                    transform: 'translateY(-50%)',
+                    marginLeft: 1,
                     padding: '0px 9px',
                     height: '22px',
                     borderColor: '#1e88e5',
@@ -322,21 +342,21 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                 />
               </Box>
               {/* REAL NAME */}
-              <Typography color="textSecondary" variant="subtitle1" sx={{position: 'relative', top: '85px'}}>
+              <Typography color="textSecondary" variant="subtitle1" sx={{position: 'relative', top: '120px'}}>
                 {user.name}
               </Typography>
               {/* FAVORITE & MESSAGE BUTTONS */}
               { user !== mainUser && (
-                <Box display="flex" flexDirection="column" alignItems="center" mt={11}>
+                <Box display="flex" flexDirection="column" alignItems="center" mt={15}>
                   <IconButton color={isFavorited ? 'secondary' : 'default'} onClick={() => handleFavoriteToggle(userId)}>
                     <FavoriteIcon fontSize="large" />
                   </IconButton>
                   <Button
                     aria-label="send message"
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     startIcon={<MessageIcon />}
-                    sx={{ mt: 4 }}
+                    sx={{ mt: 2 }}
                     onClick={handleChatClick}
                   >
                     Message
@@ -348,16 +368,18 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                   <Button
                     variant="outlined"
                     color="primary"
+                    startIcon={<EditIcon />}
                     onClick={() => setEditModalOpen(true)}
-                    sx={{ marginTop: 15 }}
+                    sx={{ marginTop: 20 }}
                   >
                     Edit Profile
                   </Button>
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => setFavoritesModalOpen(true)} // Abre el modal
-                    sx={{ marginTop: 15 }}
+                    startIcon={<FavoriteIcon />}
+                    onClick={() => setFavoritesModalOpen(true)}
+                    sx={{ marginTop: 20, marginLeft: 2 }}
                   >
                     Favorites
                   </Button>
@@ -370,6 +392,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
               <Card sx={{ padding: 3, marginTop: 0.2 }}>
                 <CardContent>
                   <>
+                    {/* INSTRUMENTS, GROUP OR SERVICE (Conditionally rendered by User Type) */}
                     {user?.userType === 'Musician' && user.musicianInfo?.instruments && (
                       <>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Instruments</Typography>
@@ -397,6 +420,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                         </Typography>
                       </>
                     )}
+
                     {/* MUSIC STYLES, LANGUAGES, LOCATION */}
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Music Styles</Typography>
                     <Typography sx={{ mb: 1.5 }}>
@@ -413,6 +437,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                       <PlaceIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
                       {user.location}
                     </Typography>
+
                     {/* DESCRIPTION */}
                     <Divider sx={{ my: 3 }} />
                     <Typography variant="body1" sx={{ textAlign: 'justify' }}>{user.description}</Typography>
@@ -456,62 +481,68 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
         {/* GALLERY */}
         <Box
           sx={{
-            marginTop: 4,
+            marginTop: 2,
             width: userAdvertisements.length === 0 ? '100%' : '50%', // Occupies all Width if no advertisements
-            margin: 'auto',
-            padding: 1.2,
+            //margin: 'auto',
+            padding: 0,
             float: userAdvertisements.length === 0 ? 'none' : 'right',
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Gallery</Typography>
-          <ImageList cols={userAdvertisements.length === 0 ? 5 : 4} gap={8}>
-            {user.photos.map((photo, index) => (
-              <ImageListItem
-                key={index}
-                onClick={() => handleDialogOpen(index)}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  overflow: 'visible',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.01)',
-                    zIndex: 1,
-                  },
-                }}
-              >
-                <img
-                  src={photo}
-                  alt={`Gallery Item ${index + 1}`}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '8px',
-                    boxShadow: '0px 2px 10px rgba(0,0,0,0.1)',
+          <Card sx={{ padding: 2, marginTop: 0.2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Gallery</Typography>
+            <ImageList cols={userAdvertisements.length === 0 ? 5 : 4} gap={8}>
+              {userPhotos.map((photo, index) => (
+                <ImageListItem
+                  key={index}
+                  onClick={() => handleDialogOpen(index)}
+                  sx={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'visible',
                     transition: 'transform 0.3s ease',
+                    '&:hover': {
+                      transform: 'scale(1.01)',
+                      zIndex: 1,
+                    },
                   }}
-                />
-              </ImageListItem>
-            ))}
-          </ImageList>
+                >
+                  <img
+                    src={photo}
+                    alt={`Gallery Item ${index + 1}`}
+                    style={{
+                      width: '100%',
+                      height: '200px',
+                      objectFit: 'cover',
+                      borderRadius: '8px',
+                      boxShadow: '0px 2px 10px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Card>
         </Box>
 
         {/* ADVERTISEMENTS */}
         {userAdvertisements.length > 0 && (
-          <Box sx={{ marginTop: 4, width: '50%', margin: 'auto', padding: 1.2, float: 'left' }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Advertisements</Typography>
-            <Grid container spacing={2}>
-              {userAdvertisements.map((advertisement) => (
-                <Grid item xs={12} key={advertisement.id}>
-                  <AdvertisementCard ad={advertisement} mainUser={mainUser} fetchAdvertisements={fetchAdvertisements}/>
-                </Grid>
-              ))}
-            </Grid>
+          <Box sx={{ marginTop: 1, width: '50%', padding: 1.2, float: 'left' }}>
+            <Card sx={{ padding: 2, marginTop: 0 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Advertisements</Typography>
+              <Grid container spacing={2}>
+                {userAdvertisements.map((advertisement) => (
+                  <Grid item xs={12} key={advertisement.id}>
+                    <AdvertisementCard ad={advertisement} mainUser={mainUser} fetchAdvertisements={fetchAdvertisements} handleDeleteAlert={handleDeleteAlert}/>
+                  </Grid>
+                ))}
+              </Grid>
+            </Card>
           </Box>
         )}
 
-        {/* GALLERY IMAGE VIEWER - MODAL */}
+        {/* --- MODALS --- */}
+
+        {/* IMAGE VIEWER - MODAL */}
         {modalOpen && (
           <div
             style={{
@@ -520,96 +551,96 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo oscuro semitransparente
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              zIndex: 1300,  // Asegura que esté por encima de otros contenidos
+              zIndex: 1300,
             }}
-            onClick={handleDialogClose}  // Cierra el modal cuando haces clic fuera del contenido
+            onClick={handleDialogClose}
           >
             <div
-              onClick={(e) => e.stopPropagation()}  // Evita que se cierre el modal al hacer clic dentro del contenido
+              onClick={(e) => e.stopPropagation()}
               style={{
                 position: 'relative',
                 textAlign: 'center',
                 padding: 0,
-                backgroundColor: 'transparent',  // Fondo transparente para el contenido del modal
-                width: '70vw', // Limita el ancho del modal al 70% de la ventana
-                height: '80vh', // Limita la altura al 80% de la ventana
-                overflow: 'hidden', // Evita que el contenido se desborde
+                backgroundColor: 'transparent',
+                width: '70vw',
+                height: '80vh',
+                overflow: 'hidden',
                 borderRadius: '8px',
                 display: 'flex',
-                justifyContent: 'center', // Centra el contenido horizontalmente
-                alignItems: 'center', // Centra el contenido verticalmente
-                aspectRatio: '16/9', // Relación de aspecto para el contenedor
+                justifyContent: 'center',
+                alignItems: 'center',
+                aspectRatio: '16/9',
               }}
             >
-              {/* Botón de cerrar en la esquina superior derecha */}
+              {/* CLOSE ICON (X) */}
               <IconButton
                 onClick={handleDialogClose}
                 sx={{
                   position: 'absolute',
                   top: '10px',
                   right: '10px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente para el botón
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'white',
-                  zIndex: 3, // Asegura que el botón de cierre esté encima de la imagen
+                  zIndex: 3,
                 }}
               >
-                <CloseIcon />  {/* Icono de cierre (X) */}
+                <CloseIcon />
               </IconButton>
 
-              {/* Botón de flecha izquierda */}
+              {/* ARROW LEFT */}
               <IconButton
                 onClick={handlePreviousImage}
                 sx={{
                   position: 'absolute',
                   top: '50%',
                   left: '10px',
-                  transform: 'translateY(-50%)',  // Centra verticalmente
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'white',
-                  zIndex: 2, // Asegura que la flecha esté encima de la imagen
+                  zIndex: 2,
                 }}
               >
                 <ArrowBackIosIcon sx={{ position: 'relative', left: '4px' }} />
               </IconButton>
 
-              {/* Contenedor de la imagen */}
+              {/* IMAGE CONTAINER */}
               <div
                 style={{
                   position: 'relative',
-                  width: '100%', // El contenedor ocupa el 100% del ancho disponible
-                  height: '100%', // El contenedor ocupa el 100% de la altura disponible
+                  width: '100%',
+                  height: '100%',
                   display: 'flex',
-                  justifyContent: 'center', // Centra la imagen horizontalmente
-                  alignItems: 'center', // Centra la imagen verticalmente
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
                 <img
                   src={user.photos[currentImageIndex]}
                   alt={`Gallery item ${currentImageIndex + 1}`}
                   style={{
-                    maxWidth: '100%', // La imagen ocupa el 100% del ancho disponible
-                    maxHeight: '100%', // La imagen ocupa el 100% de la altura disponible
-                    objectFit: 'contain', // Mantiene la proporción de la imagen y se asegura que quepa en el contenedor sin recortes
-                    display: 'block', // Elimina cualquier espacio extra debajo de la imagen
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
                   }}
                 />
               </div>
 
-              {/* Botón de flecha derecha */}
+              {/* ARROW RIGHT */}
               <IconButton
                 onClick={handleNextImage}
                 sx={{
                   position: 'absolute',
                   top: '50%',
                   right: '10px',
-                  transform: 'translateY(-50%)',  // Centra verticalmente
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semitransparente para el botón
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'white',
-                  zIndex: 2, // Asegura que la flecha esté encima de la imagen
+                  zIndex: 2,
                 }}
               >
                 <ArrowForwardIosIcon sx={{ position: 'relative', left: '2px' }} />
@@ -617,7 +648,6 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
             </div>
           </div>
         )}
-
 
         {/* EDIT PROFILE FORM - MODAL */}
         <Dialog open={editModalOpen} onClose={handleEditModalClose} maxWidth="md" fullWidth>
@@ -635,15 +665,21 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
         
         {/* FAVORITES - MODAL */}
         {isMainUser && (
-          <Dialog open={favoritesModalOpen} onClose={() => setFavoritesModalOpen(false)} maxWidth="lg" fullWidth>
+          <Dialog
+            open={favoritesModalOpen} 
+            onClose={() => setFavoritesModalOpen(false)}
+            maxWidth={false}
+            fullWidth={false}
+            sx={{ '& .MuiDialog-paper': { width: '1500px', maxWidth: '1500px' } }}
+          >
             <DialogContent>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
                 Favorites
               </Typography>
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 {favoritedUsers && favoritedUsers.length > 0 ? (
                   favoritedUsers.map(user => (
-                    <Grid item xs={12} sm={6} md={4} lg={12 / 4} key={user.id}>
+                    <Grid item xs={12} sm={12} md={6} lg={4} key={user.id}>
                       <UserCard 
                         user={user} 
                         onFavorited={handleFavoritedAlert}
@@ -653,7 +689,25 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
                     </Grid>
                   ))
                 ) : (
-                  <Typography>No users currently selected as favorites.</Typography>
+                  <Grid item xs={12}>
+                    <Box 
+                      display="flex" 
+                      flexDirection="column" 
+                      justifyContent="center" 
+                      alignItems="center" 
+                      textAlign="center"
+                      sx={{ marginTop: 4, marginBottom: 6 }}
+                    >
+                      <img
+                        src="/LogoMusyncGray.svg"
+                        alt="Logo"
+                        style={{ width: '150px', height: 'auto', marginBottom: '20px' }}
+                      />
+                      <Typography variant="h6" color="textSecondary">
+                        No users currently selected as favorites.
+                      </Typography>
+                    </Box>
+                  </Grid>
                 )}
               </Grid>
             </DialogContent>
@@ -666,8 +720,8 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
           autoHideDuration={6000}
           onClose={() => setAlertOpen(false)}
           anchorOrigin={{
-            vertical: 'bottom',  // Position it at the top of the screen
-            horizontal: 'center',  // Center it horizontally
+            vertical: 'bottom',
+            horizontal: 'center',
           }}
         >
           <Alert

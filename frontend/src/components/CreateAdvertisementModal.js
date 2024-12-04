@@ -81,9 +81,10 @@ const CreateAdvertisementModal = ({
             value={formValues.location}
             onChange={onChange}
           >
-            <MenuItem value="Barcelona, Spain">Barcelona, Spain</MenuItem>
-            <MenuItem value="Madrid, Spain">Madrid, Spain</MenuItem>
-            <MenuItem value="Valencia, Spain">Valencia, Spain</MenuItem>
+            <MenuItem value="Barcelona, Spain">New York, USA</MenuItem>
+            <MenuItem value="Madrid, Spain">Los Angeles, USA</MenuItem>
+            <MenuItem value="Valencia, Spain">Barcelona, Spain</MenuItem>
+            <MenuItem value="Valencia, Spain">Madrid, Spain</MenuItem>
           </Select>
         </FormControl>
 

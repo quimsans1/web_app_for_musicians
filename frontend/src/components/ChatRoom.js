@@ -14,46 +14,22 @@ const ChatRoom = ({ roomId }) => {
     const storedMessages = JSON.parse(localStorage.getItem(`chat_messages_${roomId}`)) || [];
     setMessages(storedMessages);
 
-    // Unirse a la sala cuando el componente se monta
-    socket.emit('joinRoom', roomId);
-
-    // Función para manejar la recepción de mensajes
-    const handleMessage = (message) => {
-      // Agregar solo si no es un mensaje enviado por el usuario
-      if (!message.isSender) {
-        setMessages((prev) => {
-          const updatedMessages = [...prev, { ...message, isSender: false }];
-          localStorage.setItem(`chat_messages_${roomId}`, JSON.stringify(updatedMessages)); // Actualizar localStorage
-          return updatedMessages;
-        });
-      }
-    };
-
-    // Suscripción al evento de mensaje
-    socket.on('message', handleMessage);
-
-    // Limpieza al desmontar
-    return () => {
-      socket.emit('leaveRoom', roomId);
-      socket.off('message', handleMessage);
-    };
+    return;
   }, [roomId]);
 
   const sendMessage = () => {
     if (newMessage.trim()) {
       const messageToSend = { roomId, text: newMessage, isSender: true };
-      // Enviar el mensaje al servidor
-      socket.emit('sendMessage', messageToSend);
 
-      // Actualizar localStorage y estado localmente
+      // Update localStorage
       setMessages((prev) => {
-        const updatedMessages = [...prev, messageToSend]; // Añadir como mensaje enviado
-        localStorage.setItem(`chat_messages_${roomId}`, JSON.stringify(updatedMessages)); // Actualizar localStorage
-        return updatedMessages; // Agregar inmediatamente a la lista de mensajes
+        const updatedMessages = [...prev, messageToSend];
+        localStorage.setItem(`chat_messages_${roomId}`, JSON.stringify(updatedMessages));
+        return updatedMessages;
       });
-      setNewMessage(''); // Limpiar el campo de texto
+      setNewMessage(''); // Clean text field
 
-      // Desplazar-se cap avall després de l'enviament del missatge
+      // Scroll down after message is send
       scrollToBottom();
     }
   };
@@ -65,11 +41,9 @@ const ChatRoom = ({ roomId }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box display="flex" flexDirection="row" flexGrow={1}>
-        {/* Secció dels usuaris (a l'esquerra) */}
-
-        {/* Secció dels missatges (a la dreta) */}
         <Box flexGrow={1} display="flex" flexDirection="column">
-          {/* Paper per encapsular la secció dels missatges */}
+
+          {/* CHAT ROOM */}
           <Paper elevation={3} style={{ height: '100%', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ overflowY: 'auto', flexGrow: 1, padding: 2, maxHeight: 'calc(100vh - 200px)' }}>
               <List>
@@ -80,7 +54,7 @@ const ChatRoom = ({ roomId }) => {
                         maxWidth: '80%',
                         padding: 1,
                         borderRadius: '10px',
-                        backgroundColor: msg.isSender ? '#dcf8c6' : '#ffffff',
+                        backgroundColor: msg.isSender ? '#90caf9' : '#ffffff',
                         boxShadow: 1,
                       }}
                     >
@@ -94,17 +68,29 @@ const ChatRoom = ({ roomId }) => {
               </List>
             </Box>
           </Paper>
-          {/* Barra d'entrada de missatges */}
+
+          {/* TEXT FIELD & SEND BUTTON */}
           <Box display="flex" marginTop={2}>
             <TextField
               fullWidth
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && newMessage.trim()) {
+                  sendMessage();
+                }
+              }}
               placeholder="Write a message..."
               variant="outlined"
               size="small"
             />
-            <Button onClick={sendMessage} variant="contained" color="primary" sx={{ marginLeft: 1 }}>
+            <Button
+              onClick={sendMessage}
+              variant={newMessage.trim() ? 'contained' : 'outlined'}
+              color="primary"
+              sx={{ marginLeft: 1 }}
+              disabled={!newMessage.trim()} 
+            >
               Send
             </Button>
           </Box>

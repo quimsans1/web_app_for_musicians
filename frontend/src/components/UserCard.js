@@ -4,7 +4,7 @@ import { Typography, Avatar, Card, CardContent, Chip, Box, IconButton, Snackbar,
 import MessageIcon from '@mui/icons-material/Message';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import MusicNoteIcon from '@mui/icons-material/MusicNote'; // Nota musical
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PlaceIcon from '@mui/icons-material/Place';
 import PublicIcon from '@mui/icons-material/Public';
 import { addUserToFavorites, deleteUserFromFavorites } from '../services/favoritesService';
@@ -23,8 +23,8 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
   }, [favorites, user.id]);
 
   const handleChatClick = (e) => {
-    e.stopPropagation(); // Evita que se dispare el evento de clic en la tarjeta
-    navigate('/chats', { state: { selectedChatId: user.id } }); // Navega a la página de chats con el ID del usuario
+    e.stopPropagation();
+    navigate('/chats', { state: { selectedChatId: user.id } }); // Navigate to chat page by ID
   };
 
   const handleFavoriteClick = async (e) => {
@@ -40,7 +40,6 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
       try {        
         if (!isIncludedInFavorites) {
           await addUserToFavorites(user.id);
-          //setIsFavorited(true);
           onFavorited(`${user.nickname} added to your favorites.`);
         }
       } catch ( error) {
@@ -59,6 +58,7 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
           transition: 'transform 0.2s, box-shadow 0.2s',
           width: '100%',
           height: '200px',
+          minWidth: '380px',
           '&:hover': {
             cursor: 'pointer',
             transform: 'scale(1.05)',
@@ -70,7 +70,7 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
               color: 'black',
             },
             '.favorite-icon': {
-              color: isFavorited ? 'red' : 'black',
+              color: isFavorited ? '#e53935' : 'black',
             },
             '.location-text': {
               color: 'black',
@@ -94,7 +94,7 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: `url(${user.backgroundImage || 'defaultImage.jpg'})`, // Imagen predeterminada si no existe
+            backgroundImage: `url(${user.backgroundImage || 'defaultImage.jpg'})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0,
@@ -167,7 +167,7 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
 
           {/* USER INFORMATION */}
           <div style={{ marginTop: 10 }}>
-            {/* Mostrar música estilos */}
+            {/* MUSIC STYLES */}
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
               <MusicNoteIcon
                 className="icon"
@@ -175,17 +175,22 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
                   fontSize: '19px',
                   marginRight: '4px',
                   color: 'gray',
-                  transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out', // Añadir transición
+                  transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
                 }}
               />
               <Typography>
                 {user.musicStyles && user.musicStyles.length > 0
-                  ? user.musicStyles.join(', ')
+                  ? (() => {
+                      const musicStylesString = user.musicStyles.join(', ');
+                      return musicStylesString.length > 23
+                        ? musicStylesString.slice(0, 20) + '...'
+                        : musicStylesString;
+                    })()
                   : 'No music styles'}
               </Typography>
             </div>
 
-            {/* Music Info (Conditional Rendering) */}
+            {/* MUSICIAN, GROUP OR SERVICE INFORMATION (Conditional Rendering) */}
             <div>
               {user.userType === 'Musician' ? (
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
@@ -200,9 +205,15 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
                   />
                   <Typography>
                     {user.musicianInfo.instruments?.length > 0
-                      ? user.musicianInfo.instruments.join(', ')
+                      ? (() => {
+                          const instrumentsString = user.musicianInfo.instruments.join(', ');
+                          return instrumentsString.length > 23
+                            ? instrumentsString.slice(0, 20) + '...'
+                            : instrumentsString;
+                        })()
                       : 'No instruments'}
                   </Typography>
+
                 </div>
               ) : user.userType === 'Group' ? (
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
@@ -217,9 +228,15 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
                   />
                   <Typography>
                     {user.groupInfo.groupType?.length > 0
-                      ? user.groupInfo.groupType.join(', ')
+                      ? (() => {
+                          const groupTypeString = user.groupInfo.groupType.join(', ');
+                          return groupTypeString.length > 23
+                            ? groupTypeString.slice(0, 20) + '...'
+                            : groupTypeString;
+                        })()
                       : 'No group type'}
                   </Typography>
+
                 </div>
               ) : user.userType === 'Service' ? (
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
@@ -234,14 +251,19 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
                   />
                   <Typography>
                     {user.serviceInfo.serviceType?.length > 0
-                      ? user.serviceInfo.serviceType.join(', ')
-                      : 'No group type'}
+                      ? (() => {
+                          const serviceTypeString = user.serviceInfo.serviceType.join(', ');
+                          return serviceTypeString.length > 23
+                            ? serviceTypeString.slice(0, 20) + '...'
+                            : serviceTypeString;
+                        })()
+                      : 'No service type'}
                   </Typography>
                 </div>
               ) : null}
             </div>
 
-            {/* Mostrar idiomas */}
+            {/* LANGUAGES */}
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
               <PublicIcon
                 className="icon"
@@ -254,7 +276,12 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
               />
               <Typography>
                 {user.languages && user.languages.length > 0
-                  ? user.languages.join(', ')
+                  ? (() => {
+                      const languagesString = user.languages.join(', ');
+                      return languagesString.length > 23
+                        ? languagesString.slice(0, 20) + '...'
+                        : languagesString;
+                    })()
                   : 'No languages'}
               </Typography>
             </div>
@@ -274,14 +301,14 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
             <IconButton
               aria-label="send message"
               size="small"
-              onClick={handleChatClick} // Navega a la página de chats
+              onClick={handleChatClick}
               className="icon"
               sx={{
                 color: 'gray',
                 transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
                 '&:hover': {
                   transform: 'scale(1.2)',
-                  color: 'blue !important',
+                  color: '#1e88e5 !important',
                 },
               }}
             >
@@ -293,10 +320,11 @@ const UserCard = ({ user, onFavorited, onUnFavorited, favorites }) => {
               onClick={handleFavoriteClick}
               className="favorite-icon"
               sx={{
-                color: isFavorited ? 'red' : 'gray',
+                color: isFavorited ? '#e53935' : 'gray',
                 transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
                 '&:hover': {
                   transform: 'scale(1.2)',
+                  color: '#1e88e5 !important',
                 },
               }}
             >
