@@ -188,7 +188,7 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements, handleDeleteAle
         </Card>
       </Grid>
 
-      {/* MODAL */}
+      {/* MODAL - ADVERTISEMENT VIEWER */}
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -208,14 +208,39 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements, handleDeleteAle
             width: 500,
           }}
         >
-          <Typography
-            id="advertisement-details-title"
-            variant="h6"
-            component="h2"
-            gutterBottom
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+              marginTop: '10px',
+              marginBottom: '10px'
+            }}
           >
-            {title}
-          </Typography>
+            <Typography
+              id="advertisement-details-title"
+              variant="h6"
+              component="h2"
+              gutterBottom
+            >
+              {title}
+            </Typography>
+            <Chip
+              label={type}
+              variant="filled"
+              size="medium"
+              sx={{
+                padding: '0px 9px',
+                height: '22px',
+                borderColor: type === 'Offer' ? '#1e88e5' : '#8e24aa',
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                color: type === 'Offer' ? '#1e88e5' : '#8e24aa',
+                backgroundColor: 'white',
+              }}
+            />
+          </div>
           <img
             src={image}
             alt={title}
@@ -227,7 +252,12 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements, handleDeleteAle
               marginBottom: '16px',
             }}
           />
-          <Typography id="advertisement-details-description" variant="body1" gutterBottom>
+          <Typography
+            id="advertisement-details-description"
+            variant="body1"
+            gutterBottom
+            sx={{ textAlign: 'justify', marginBottom: '10px' }}
+          >
             {description}
           </Typography>
           <Typography color="textSecondary" variant="body2" gutterBottom>
@@ -265,47 +295,33 @@ const AdvertisementsCard = ({ ad, mainUser, fetchAdvertisements, handleDeleteAle
           )}
 
           {/* MESSAGE ICON */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: 20,
-              right: 20,
-              display: 'flex',
-              gap: 1,
-            }}
-          >
-            <IconButton
-              aria-label="send message"
-              size="small"
-              onClick={handleChatClick}
+          {userId !== mainUser.id && (
+            <Box
               sx={{
-                color: 'gray',
-                transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.2)',
-                  color: 'blue !important',
-                },
+                position: 'absolute',
+                bottom: 20,
+                right: 20,
+                display: 'flex',
+                gap: 1,
               }}
             >
-              <MessageIcon />
-            </IconButton>
-          </Box>
-          <div style={{ position: 'absolute', bottom: '125px', right: '30px' }}>
-            <Chip
-              label={type}
-              variant="filled"
-              size="medium"
-              sx={{
-                padding: '0px 9px',
-                height: '22px',
-                borderColor: type === 'Offer' ? '#1e88e5' : '#8e24aa',
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                color: type === 'Offer' ? '#1e88e5' : '#8e24aa',
-                backgroundColor: 'white',
-              }}
-            />
-          </div>
+              <IconButton
+                aria-label="send message"
+                size="small"
+                onClick={handleChatClick}
+                sx={{
+                  color: 'gray',
+                  transition: 'color 0.2s ease-in-out, transform 0.2s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                    color: 'blue !important',
+                  },
+                }}
+              >
+                <MessageIcon />
+              </IconButton>
+            </Box>
+          )}
         </Box>
       </Modal>
     </>

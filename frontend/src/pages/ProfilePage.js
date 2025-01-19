@@ -95,7 +95,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
           setUser(user);
           setUserType(user.userType)
         } catch (error) {
-          console.error('Error al obtener todos los usuarios:', error);
+          console.error('Error obtaining all users:', error);
         }
       };
       fetchUser();
@@ -348,7 +348,7 @@ const ProfilePage = ({ mainUser, getMainUserAgain }) => {
               {/* FAVORITE & MESSAGE BUTTONS */}
               { user !== mainUser && (
                 <Box display="flex" flexDirection="column" alignItems="center" mt={15}>
-                  <IconButton color={isFavorited ? 'secondary' : 'default'} onClick={() => handleFavoriteToggle(userId)}>
+                  <IconButton color={isFavorited ? 'error' : '#e53935'} onClick={() => handleFavoriteToggle(userId)}>
                     <FavoriteIcon fontSize="large" />
                   </IconButton>
                   <Button

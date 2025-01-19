@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import AdvertisementsPage from './pages/AdvertisementsPage';
 import ChatsPage from './pages/ChatsPage';
+import NewsPage from './pages/NewsPage';
 import Layout from './Layout';
 import { getMainUser } from './services/userService';
 
@@ -43,6 +44,7 @@ function App() {
             element={<ProfilePage mainUser={mainUser} getMainUserAgain={setGetMainUserAgain} />} />
           <Route path="advertisements" element={<AdvertisementsPage mainUser={mainUser} />} />
           <Route path="chats" element={<ChatsPage />} />
+          <Route path="news" element={<NewsPage />} />
         </Route>
       </Routes>
     )

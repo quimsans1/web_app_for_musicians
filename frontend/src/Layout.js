@@ -141,6 +141,15 @@ const Layout = ({ mainUser }) => {
                 Chats
               </Typography>
             </>
+          ) : location.pathname === '/news' ? (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', marginRight: -32 }}>
+                <img src="/LogoMusync.svg" alt="Logo" style={{ width: '10%', height: 'auto' }} />
+              </Box>
+              <Typography variant="h6" noWrap>
+                News
+              </Typography>
+            </>
           ) : null}
         </Toolbar>
       </AppBar>
